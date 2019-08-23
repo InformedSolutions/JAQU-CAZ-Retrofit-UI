@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RegisterCheckerApi < BaseApi
-  base_uri ENV['TAXI_PHV_REGISTER_API_URL']
+  base_uri ENV['RETROFIT_API_URL']
 
   class << self
     def register_job(file_name, correlation_id)
