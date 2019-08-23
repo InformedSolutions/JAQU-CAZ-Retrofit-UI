@@ -29,7 +29,7 @@ describe 'User singing in', type: :request do
     context 'when incorrect credentials given' do
       before do
         expect(Cognito::AuthUser).to receive(:call)
-          .and_raise(Aws::CognitoIdentityProvider::Errors::NotAuthorizedException)
+          .and_raise(Aws::CognitoIdentityProvider::Errors::NotAuthorizedException.new('', ''))
       end
 
       it 'shows `The username or password you entered is incorrect` message' do

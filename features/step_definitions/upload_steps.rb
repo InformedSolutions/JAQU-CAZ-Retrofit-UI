@@ -44,33 +44,8 @@ When('I press refresh page link when api response not running or finished') do
 end
 
 #  Scenario: Upload a csv file whose name is not compliant with the naming rules
-When('I upload a csv file whose name format is invalid #1') do
-  attach_file(:file, empty_csv_file('сAZ-2020-01-08-4321.csv'))
-  click_button 'Upload'
-end
-
-When('I upload a csv file whose name format is invalid #2') do
-  attach_file(:file, empty_csv_file('CAZ-01-08-2020-4321.csv'))
-  click_button 'Upload'
-end
-
-When('I upload a csv file whose name format is invalid #3') do
-  attach_file(:file, empty_csv_file('CAZ-2020-01--4321.csv'))
-  click_button 'Upload'
-end
-
-When('I upload a csv file whose name format is invalid #4') do
-  attach_file(:file, empty_csv_file('CAZ-2020-01-08-.csv'))
-  click_button 'Upload'
-end
-
-When('I upload a csv file whose name format is invalid #5') do
-  attach_file(:file, empty_csv_file('CAZ-2020-01-08-Auth_orityID-4321.csv'))
-  click_button 'Upload'
-end
-
-When('I upload a csv file whose name format is invalid #6') do
-  attach_file(:file, empty_csv_file('cCAZ-2020-01-08-4321.CSV'))
+When('I upload a csv file whose name format is invalid') do
+  attach_file(:file, empty_csv_file('CAZ-2020-01-08.csv'))
   click_button 'Upload'
 end
 
