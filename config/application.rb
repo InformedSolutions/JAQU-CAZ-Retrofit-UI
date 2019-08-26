@@ -28,6 +28,7 @@ module CsvUploader
     config.x.feedback_url = (ENV['FEEDBACK_URL'].presence || feedback_url_default)
 
     config.x.service_name = 'National Register of Retrofitted Vehicles'
+    config.x.contact_email = 'Useraccount.Query@defra.gov.uk'
 
     # https://mattbrictson.com/dynamic-rails-error-pages
     config.exceptions_app = routes

@@ -11,8 +11,4 @@ module ApplicationHelper
   def service_name
     Rails.configuration.x.service_name
   end
-
-  def contact_email
-    'Useraccount.Query@defra.gov.uk'
-  end
 end
