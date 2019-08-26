@@ -24,7 +24,7 @@ module CsvUploader
 
     config.x.session_timeout_in_min = (ENV['SESSION_TIMEOUT'].presence || 15).to_i
 
-    feedback_url_default = 'https://www.surveymonkey.co.uk/r/2T8BX2D'
+    feedback_url_default = 'https://www.surveymonkey.com/r/NXXPW3G'
     config.x.feedback_url = (ENV['FEEDBACK_URL'].presence || feedback_url_default)
 
     config.x.service_name = 'National Register of Retrofitted Vehicles'
