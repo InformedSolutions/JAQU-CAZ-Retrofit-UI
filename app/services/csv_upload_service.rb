@@ -42,6 +42,7 @@ class CsvUploadService < BaseService
   end
 
   def upload_to_s3
+    Rails.logger.info "Uploading file to s3 by a user: #{user.username}"
     s3_object = AMAZON_S3_CLIENT.bucket(bucket_name).object(file.original_filename)
     return true if s3_object.upload_file(file, metadata: file_metadata)
 

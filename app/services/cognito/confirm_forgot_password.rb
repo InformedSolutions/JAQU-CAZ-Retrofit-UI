@@ -44,6 +44,7 @@ module Cognito
     end
 
     def preform_cognito_call
+      Rails.logger.info "Confirming forgot password by a user: #{username}"
       cognito_call
     rescue Aws::CognitoIdentityProvider::Errors::CodeMismatchException,
            Aws::CognitoIdentityProvider::Errors::ExpiredCodeException
