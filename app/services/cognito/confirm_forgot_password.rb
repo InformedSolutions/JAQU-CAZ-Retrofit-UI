@@ -34,15 +34,6 @@ module Cognito
       raise CallException.new(form.message, error_path)
     end
 
-    def cognito_call
-      COGNITO_CLIENT.confirm_forgot_password(
-        client_id: ENV['AWS_COGNITO_CLIENT_ID'],
-        username: username,
-        password: password,
-        confirmation_code: code
-      )
-    end
-
     def preform_cognito_call
       cognito_call
     rescue Aws::CognitoIdentityProvider::Errors::CodeMismatchException,
@@ -53,6 +44,16 @@ module Cognito
     rescue Aws::CognitoIdentityProvider::Errors::ServiceError => e
       Rails.logger.error e
       raise CallException.new('Something went wrong', error_path)
+    end
+
+    def cognito_call
+      Rails.logger.info "[Cognito] Confirming forgot password by a user: #{username}"
+      COGNITO_CLIENT.confirm_forgot_password(
+        client_id: ENV['AWS_COGNITO_CLIENT_ID'],
+        username: username,
+        password: password,
+        confirmation_code: code
+      )
     end
   end
 end

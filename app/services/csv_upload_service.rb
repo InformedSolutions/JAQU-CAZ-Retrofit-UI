@@ -42,13 +42,18 @@ class CsvUploadService < BaseService
   end
 
   def upload_to_s3
-    s3_object = AMAZON_S3_CLIENT.bucket(bucket_name).object(file.original_filename)
-    return true if s3_object.upload_file(file, metadata: file_metadata)
+    Rails.logger.info "[S3Upload] Uploading file to s3 by a user: #{user.username}"
+    return true if aws_call
 
     raise CsvUploadFailureException, I18n.t('csv.errors.base')
   rescue Aws::S3::Errors::ServiceError => e
     Rails.logger.error e
     raise CsvUploadFailureException, I18n.t('csv.errors.base')
+  end
+
+  def aws_call
+    s3_object = AMAZON_S3_CLIENT.bucket(bucket_name).object(file.original_filename)
+    s3_object.upload_file(file, metadata: file_metadata)
   end
 
   def file_metadata
