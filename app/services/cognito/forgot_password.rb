@@ -28,13 +28,13 @@ module Cognito
     end
 
     def cognito_call
-      Rails.logger.info "Forgot password call by a user: #{username}"
+      Rails.logger.info "[Cognito] Forgot password call by a user: #{username}"
       COGNITO_CLIENT.forgot_password(
         client_id: ENV['AWS_COGNITO_CLIENT_ID'],
         username: username
       )
     rescue Aws::CognitoIdentityProvider::Errors::ServiceError => e
-      Rails.logger.error "#{e.class}: { username: #{username}, error: #{e}}"
+      Rails.logger.error "[Cognito] #{e.class}: { username: #{username}, error: #{e}}"
     end
   end
 end

@@ -28,6 +28,7 @@ module Cognito
     end
 
     def user_data
+      Rails.logger.info "[Cognito] Getting user: #{user.username}"
       @user_data ||= COGNITO_CLIENT.get_user(access_token: access_token)
     end
   end

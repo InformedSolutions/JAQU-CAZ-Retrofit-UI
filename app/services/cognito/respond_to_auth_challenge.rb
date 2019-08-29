@@ -33,7 +33,7 @@ module Cognito
     end
 
     def respond_to_auth
-      Rails.logger.info "Respond to auth call by a user: #{user.username}"
+      Rails.logger.info "[Cognito] Respond to auth call by a user: #{user.username}"
       call_cognito
     rescue Aws::CognitoIdentityProvider::Errors::InvalidPasswordException
       raise NewPasswordException, self.class.password_complexity_error

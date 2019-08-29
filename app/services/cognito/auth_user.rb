@@ -18,14 +18,15 @@ module Cognito
     private
 
     def auth_user
+      Rails.logger.info "[Cognito] Authenticating user: #{username}"
       COGNITO_CLIENT.initiate_auth(
         client_id: ENV['AWS_COGNITO_CLIENT_ID'],
         auth_flow: 'USER_PASSWORD_AUTH',
         auth_parameters:
-            {
-              'USERNAME' => username,
-              'PASSWORD' => password
-            }
+          {
+            'USERNAME' => username,
+            'PASSWORD' => password
+          }
       )
     end
 
