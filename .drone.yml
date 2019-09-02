@@ -207,3 +207,4 @@ name: github_private_key
 get:
   path: /secrets/drone.global
   name: githubPrivateKey
+
