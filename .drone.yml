@@ -88,7 +88,13 @@ steps:
   - name: initialise ecr
     image: hashicorp/terraform:0.12.3
     commands:
-      - git clone https://github.com/InformedSolutions/JAQU-CAZ-IAC.git
+      - mkdir ~/.ssh
+      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC/terraform/projects/retrofit-web/environments/dev
       - terraform init
       - terraform workspace select dev || terraform workspace new dev
@@ -98,6 +104,8 @@ steps:
         from_secret: aws_access_key_id
       TF_VAR_secret_key:
         from_secret: aws_secret_access_key
+      GIT_PRIVATE_SSH:
+        from_secret: github_private_key
     when:
       event:
         exclude:
@@ -164,3 +172,38 @@ trigger:
   event:
   - pull_request
   - push
+
+---
+kind: secret
+name: aws_access_key_id
+get:
+  path: /secrets/drone.global
+  name: awsAccessKeyId
+  
+---
+kind: secret
+name: aws_secret_access_key
+get:
+  path: /secrets/drone.global
+  name: awsSecretAccessKey
+  
+---
+kind: secret
+name: sonar_host
+get:
+  path: /secrets/drone.global
+  name: sonarHost
+  
+---
+kind: secret
+name: sonar_token
+get:
+  path: /secrets/drone.global
+  name: sonarToken
+
+---
+kind: secret
+name: github_private_key
+get:
+  path: /secrets/drone.global
+  name: githubPrivateKey
