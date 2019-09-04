@@ -10,12 +10,11 @@
         Use this page to upload retrofitted vehicles data.
         Your upload must be a CSV file with information in a specific format.
         For information on this format see the
-        = succeed "." do
-          = link_to('data rules', data_rules_upload_index_path)
+        %a{href: data_rules_upload_index_path} data rules
 
       = form_tag(import_upload_index_path, multipart: true) do
         .govuk-form-group{class: ('govuk-form-group--error' if alert)}
-          %label.govuk-label{for: "file-upload-1"}
+          %label.govuk-label{for: 'file-upload-1'}
             Upload a file
           - if alert
             %span#govuk-error-message.govuk-error-message

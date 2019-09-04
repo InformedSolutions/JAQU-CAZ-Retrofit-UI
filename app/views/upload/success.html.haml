@@ -5,13 +5,9 @@
         %h1.govuk-panel__title
           Upload successful
         .govuk-panel__body
-          = service_name
-          has been successfully updated
+          Retrofitted vehicles database has been successfully updated
       %h2.govuk-heading-m What happens next
-      %p
-        We have saved your data to the
-        = succeed "." do
-          = service_name
+      %p We have saved your data to the Retrofitted vehicles database.
       %p You will need to reupload updated document regularly.
       %p
         = link_to 'What did you think of this service?', Rails.configuration.x.feedback_url, target: '_blank'

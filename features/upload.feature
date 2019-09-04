@@ -16,7 +16,8 @@ Feature: Upload
     When I press refresh page link
     Then I am redirected to the Success page
       And I should see "Upload successful"
-
+      And I should see "Retrofitted vehicles database has been successfully updated"
+      And I should see "We have saved your data to the Retrofitted vehicles database."
   Scenario: Upload a csv file and redirect to error page when api response not running or finished
     Given I am on the Upload page
     When I upload a valid csv file
@@ -25,12 +26,13 @@ Feature: Upload
     When I press refresh page link when api response not running or finished
     Then I am redirected to the Upload page
       And I should see "There was a problem"
+      And I should see "Uploaded file is not valid"
 
   Scenario: Upload a csv file whose name is not compliant with the naming rules
     Given I am on the Upload page
     When I upload a csv file whose name format is invalid
     Then I should see "The selected file must be named correctly"
-#
+
   Scenario: Upload a csv file format that is not .csv or .CSV
     Given I am on the Upload page
     When I upload a csv file whose format that is not .csv or .CSV
