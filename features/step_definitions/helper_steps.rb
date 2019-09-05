@@ -61,11 +61,19 @@ end
 
 Given('I am on the Upload page') do
   sign_in_user
-  visit root_path
+  visit authenticated_root_path
 end
 
 Given('I am on the Sign in page') do
   visit new_user_session_path
+end
+
+Then('I am redirected to the root page') do
+  expect(page).to have_current_path('/')
+end
+
+Then('I am redirected to the Upload page') do
+  expect(page).to have_current_path(authenticated_root_path)
 end
 
 Then('I should see {string} link') do |string|
