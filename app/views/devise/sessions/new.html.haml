@@ -24,7 +24,7 @@
           %span#govuk-error-message.govuk-error-message
             - if alert
               %span.govuk-visually-hidden Error:
-              = alert || 'Enter your email'
+              = alert
           = f.email_field :username,
             autofocus: true,
             autocomplete: 'username',
