@@ -97,7 +97,7 @@ steps:
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC/terraform/projects/retrofit-web/environments/global
       - terraform init
-      - terraform workspace select dev || terraform workspace new dev
+      - terraform workspace select default || terraform workspace new default
       - terraform apply -target=module.ecr -auto-approve
     environment:
       TF_VAR_access_key:
