@@ -163,7 +163,7 @@ steps:
       branch: develop
 
   # Invoke terraform scripts with tagged image number
-  - name: deploy to dev
+  - name: deploy to sit
     image: hashicorp/terraform:0.12.3
     commands:
       - cd JAQU-CAZ-IAC/terraform/projects/retrofit-web/environments/dev
