@@ -166,9 +166,9 @@ steps:
   - name: deploy to sit
     image: hashicorp/terraform:0.12.3
     commands:
-      - cd JAQU-CAZ-IAC/terraform/projects/retrofit-web/environments/dev
+      - cd JAQU-CAZ-IAC/terraform/projects/retrofit-web/environments/sit
       - terraform init
-      - terraform workspace select dev
+      - terraform workspace select sit
       - terraform apply -auto-approve
     environment:
       TF_VAR_access_key:
