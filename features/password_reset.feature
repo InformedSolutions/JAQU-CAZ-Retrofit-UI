@@ -1,7 +1,7 @@
 Feature: Password reset
   As a Licensing Authority
   I want to be able to reset my password
-  So that I may still upload to the National Register of Retrofitted Vehicles, even if I forget my password
+  So that I may still upload to the Retrofitted Vehicles Upload Portal, even if I forget my password
 
   Scenario: Go to forgotten password page
     Given I am on the Sign in page

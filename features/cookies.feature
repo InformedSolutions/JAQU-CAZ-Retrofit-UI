@@ -6,4 +6,4 @@ Feature: Cookies
   Scenario: User sees cookies page
     Given I am on the Sign in page
     When I press Cookies link
-    Then I should see "Details about cookies on National Register of Retrofitted Vehicles"
+    Then I should see "Details about cookies on Retrofitted Vehicles Upload Portal"
