@@ -27,7 +27,7 @@ module CsvUploader
     feedback_url_default = 'https://www.surveymonkey.com/r/NXXPW3G'
     config.x.feedback_url = (ENV['FEEDBACK_URL'].presence || feedback_url_default)
 
-    config.x.service_name = 'National Register of Retrofitted Vehicles'
+    config.x.service_name = 'Retrofitted Vehicles Upload Portal'
     config.x.contact_email = 'Useraccount.Query@defra.gov.uk'
 
     # https://mattbrictson.com/dynamic-rails-error-pages
