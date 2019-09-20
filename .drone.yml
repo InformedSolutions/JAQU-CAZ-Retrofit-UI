@@ -240,7 +240,7 @@ steps:
         from_secret: browserstack_username
       BS_AUTHKEY:
         from_secret: browserstack_auth_key
-      BASEURL_RETRO: 'http://retrofit-web-dev-1746958844.eu-west-2.elb.amazonaws.com/'
+      BASEURL_RETRO: 'http://retrofit-alb-dev-1428410439.eu-west-2.elb.amazonaws.com/'
       VALID_USERNAME: 'edmond.chhung@informed.com'
       VALID_PASSWORD: 'Edc123.,'
       BROWSER_SET: 'min'
