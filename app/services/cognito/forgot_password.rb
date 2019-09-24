@@ -24,7 +24,7 @@ module Cognito
       form = ResetPasswordForm.new(username)
       return if form.valid?
 
-      log_invalid_params form.message
+      log_invalid_params(form.message)
       raise CallException.new(form.message, error_path)
     end
 
@@ -35,7 +35,7 @@ module Cognito
         username: username
       )
       log_successful_call
-    rescue Aws::CognitoIdentityProvider::Errors::ServiceError => e
+    rescue AWS_ERROR::ServiceError => e
       log_error e
     end
   end
