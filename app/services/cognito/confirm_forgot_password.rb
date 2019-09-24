@@ -13,7 +13,7 @@ module Cognito
 
     def call
       validate_params
-      preform_cognito_call
+      perform_cognito_call
       true
     end
 
@@ -27,11 +27,15 @@ module Cognito
       )
       return if form.valid?
 
-      log_invalid_params form.message
+      log_invalid_params(form.message)
       raise CallException, form.message
     end
 
-    def preform_cognito_call
+    # Perform call to AWS Cognito to set a new password.
+    #
+    # Raise exception if confirmation code does not match, expired or passwords not meet
+    # complexity of the criteria.
+    def perform_cognito_call
       confirm_forgot_password
     rescue AWS_ERROR::CodeMismatchException, AWS_ERROR::ExpiredCodeException => e
       log_error e
@@ -39,7 +43,7 @@ module Cognito
     rescue AWS_ERROR::InvalidPasswordException, AWS_ERROR::InvalidParameterException => e
       log_error e
       raise CallException, I18n.t('password.errors.complexity')
-    rescue Aws::CognitoIdentityProvider::Errors::ServiceError => e
+    rescue AWS_ERROR::ServiceError => e
       log_error e
       raise CallException, 'Something went wrong'
     end
