@@ -22,10 +22,10 @@ module CsvUploader
     config.autoload_paths << Rails.root.join('lib')
     config.eager_load_paths << Rails.root.join('lib')
 
-    config.x.session_timeout_in_min = (ENV['SESSION_TIMEOUT'].presence || 15).to_i
-
-    feedback_url_default = 'https://www.surveymonkey.com/r/NXXPW3G'
-    config.x.feedback_url = (ENV['FEEDBACK_URL'].presence || feedback_url_default)
+    # timeout the user session without activity.
+    config.x.session_timeout_in_min = ENV.fetch('SESSION_TIMEOUT', 15).to_i
+    # link to feedback page.
+    config.x.feedback_url = ENV.fetch('FEEDBACK_URL', 'https://www.surveymonkey.com/r/NXXPW3G')
 
     config.x.service_name = 'Retrofitted Vehicles Upload Portal'
     config.x.contact_email = 'Useraccount.Query@defra.gov.uk'
