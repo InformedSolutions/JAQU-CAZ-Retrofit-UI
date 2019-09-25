@@ -1,9 +1,32 @@
 # frozen_string_literal: true
 
 module Cognito
+  ##
+  # Class responsible for the second step of the password recovery process using
+  # {ConfirmForgotPassword}[https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_ConfirmForgotPassword.html].
+  # Sets provided new password in Cognito.
+  #
+  # It requires Cognito::ForgotPassword to be called first
+  # as the user needs to submit the code sent in the previous step.
+  #
+  # ==== Usage
+  #
+  #    Cognito::ConfirmForgotPassword.call(
+  #       username: 'user@example.com',
+  #       code: '123456',
+  #       password: 'password',
+  #       password_confirmation: 'password'
+  #    )
+  #
   class ConfirmForgotPassword < CognitoBaseService
-    attr_reader :username, :password, :code, :password_confirmation
-
+    ##
+    # Initializer method for the service. Used by class level method {call}[rdoc-ref:BaseService::call]
+    #
+    # ==== Attributes
+    # * +username+ - string, user email address
+    # * +password+ - string, password submitted by the user
+    # * +password_confirmation+ - string, password confirmation submitted by the user
+    # * +code+ - 6 digit string of numbers, code sent to user
     def initialize(username:, password:, code:, password_confirmation:)
       @username = username
       @password = password
@@ -11,6 +34,10 @@ module Cognito
       @code = code
     end
 
+    ##
+    # Invokes the user params validation and perform call to AWS Cognito.
+    #
+    # Returns true if exception was not raised.
     def call
       validate_params
       perform_cognito_call
@@ -19,6 +46,11 @@ module Cognito
 
     private
 
+    # Variables used internally by the service
+    attr_reader :username, :password, :code, :password_confirmation
+
+    # Validates user data.
+    # Raise exception if validation failed.
     def validate_params
       form = ConfirmResetPasswordForm.new(
         password: password,
@@ -48,6 +80,7 @@ module Cognito
       raise CallException, 'Something went wrong'
     end
 
+    # Perform call to AWS Cognito to set a new password.
     def confirm_forgot_password
       log_action "Confirming forgot password by a user: #{username}"
       COGNITO_CLIENT.confirm_forgot_password(
