@@ -225,11 +225,11 @@ steps:
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
-    # when:
-    #   event:
-    #     exclude:
-    #     - pull_request
-    #   branch: develop
+    when:
+      event:
+        exclude:
+        - pull_request
+      branch: develop
 
     # Run end to end tests
   - name: run end to end tests
@@ -253,11 +253,11 @@ steps:
     commands:
       - cd JAQU-CAZ-QA-selenium
       - cucumber -t @RETRO --retry 3
-    # when:
-    #   event:
-    #     exclude:
-    #     - pull_request
-    #   branch: develop
+    when:
+      event:
+        exclude:
+        - pull_request
+      branch: develop
 
 volumes:
 - name: docker_sock
