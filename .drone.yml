@@ -243,11 +243,11 @@ steps:
       BASEURL_RETRO: 'http://retrofit-alb-dev-1428410439.eu-west-2.elb.amazonaws.com/'
       VALID_USERNAME: 'edmond.chhung@informed.com'
       VALID_PASSWORD: 'Edc123.,'
-      BROWSER_SET: 'min'
+      BROWSER_SET: 'mid'
       SCREENSHOT_TYPE: 'base'
       VCCS_USER: 'vccsservice'
       VCCS_PASSWORD: 'Password001!'
-      BUILD: ${DRONE_BUILD_NUMBER}
+      BUILD: RETRO-UI-${DRONE_BUILD_NUMBER}
       SPECTRE: false
       LOCATION: browserstack
     commands:
