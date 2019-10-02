@@ -30,7 +30,8 @@ module CsvUploader
     config.exceptions_app = routes
 
     # email address for sending emails, eg 'from@example.com'
-    default_email = 'Useraccount.Query@defra.gov.uk'
+    # TODO change it when final email address is decided
+    default_email = 'TaxiandPHVCentralised.Database@defra.gov.uk'
     config.x.service_email = ENV.fetch('SES_FROM_EMAIL', default_email)
 
     config.time_zone = 'London'
