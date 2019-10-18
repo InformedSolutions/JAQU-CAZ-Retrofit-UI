@@ -10,7 +10,7 @@ concurrency:
 volumes:
 - name: docker_sock
   host:
-    path: /var/run/docker.sock 
+    path: /var/run/docker.sock
 
 steps:
 
@@ -77,7 +77,7 @@ trigger:
     - push
 concurrency:
   limit: 1
-  
+
 volumes:
 - name: docker_sock
   host:
@@ -201,7 +201,7 @@ steps:
     when:
       event:
         - push
-        
+
   # Invoke sonar scan
   - name: sonar scan
     image: aosapps/drone-sonar-plugin
@@ -212,7 +212,7 @@ steps:
         from_secret: sonar_token
       sonar.ruby.coverage.reportPaths: coverage/.resultset.json
     commands:
-      - sonar-scanner 
+      - sonar-scanner
         -Dsonar.projectKey=${DRONE_REPO}
         -Dsonar.projectName=${DRONE_REPO}
         -Dsonar.host.url=$SONAR_HOST
@@ -261,8 +261,23 @@ steps:
       event:
         - push
 
-  ################################################# End Development Only #######################################################      
-  
+  - name: codedeploy ui dev
+    image: golang:alpine
+    commands:
+      - apk add --update bash python python-dev py-pip build-base
+      - pip install awscli
+      - aws deploy create-deployment --application-name retrofit-codedeploy-service-dev --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name retrofit-codedeploy-service-dev --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=retrofit/dev/appspec.yaml
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+    when:
+      event:
+        - push
+  ################################################# End Development Only #######################################################
+
 ---
 
 
@@ -292,7 +307,7 @@ trigger:
     - push
 concurrency:
   limit: 1
-  
+
 volumes:
 - name: docker_sock
   host:
@@ -491,8 +506,23 @@ steps:
       event:
         - push
 
-  ################################################# End SIT Steps #######################################################      
-  
+  - name: codedeploy ui sit
+    image: golang:alpine
+    commands:
+      - apk add --update bash python python-dev py-pip build-base
+      - pip install awscli
+      - aws deploy create-deployment --application-name retrofit-codedeploy-service-sit --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name retrofit-codedeploy-service-sit --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=retrofit/sit/appspec.yaml
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+    when:
+      event:
+        - push
+  ################################################# End SIT Steps #######################################################
+
 
 
 
@@ -507,8 +537,8 @@ steps:
 
 
   ################################################ Secrets #########################################################
-  
-  
+
+
 # Note the below values are pulled from AWS Secrets Manager via the aws-secrets Drone plugin
 ---
 kind: secret
@@ -516,21 +546,21 @@ name: aws_access_key_id
 get:
   path: /secret/drone.global
   name: awsAccessKeyId
-  
+
 ---
 kind: secret
 name: aws_secret_access_key
 get:
   path: /secret/drone.global
   name: awsSecretAccessKey
-  
+
 ---
 kind: secret
 name: sonar_host
 get:
   path: /secret/drone.global
   name: sonarHost
-  
+
 ---
 kind: secret
 name: sonar_token
@@ -558,6 +588,5 @@ name: browserstack_username
 get:
   path: /secret/drone.global
   name: browserStackUsername
-  
+
   ################################################ End Secrets #########################################################
-  
