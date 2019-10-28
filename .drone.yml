@@ -305,7 +305,8 @@ steps:
       TF_VAR_s3_aws_secret_access_key:
         from_secret: aws_secret_access_key
       TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
-      TF_VAR_secret_key_base: ${DRONE_COMMIT}
+      TF_VAR_secret_key_base: 
+        from_secret: retrofit_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-4
       TF_VAR_session_timeout: 15
       TF_VAR_feedback_url: https://www.surveymonkey.com/r/NXXPW3G
@@ -384,6 +385,9 @@ steps:
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
+    when:
+      event:
+        - push
 
   # Trigger unit tests
   - name: unit tests
@@ -397,6 +401,9 @@ steps:
       - yarn install
       - cp .env.example .env
       - rspec -f d
+    when:
+      event:
+        - push
 
   # Execute integration/scenario tests
   - name: integration tests
@@ -407,6 +414,9 @@ steps:
         path: /var/run/docker.sock
     commands:
       - cucumber
+    when:
+      event:
+        - push
 
   # Invoke static code analysis through Ruby libraries
   - name: static code analysis (Ruby)
@@ -418,6 +428,9 @@ steps:
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
+    when:
+      event:
+        - push
 
   # Invoke security analysis through Ruby libraries
   - name: security tests (Ruby)
@@ -430,6 +443,9 @@ steps:
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
+    when:
+      event:
+        - push
 
   # Push built image to ECR registry
   - name: publish image to ecr
@@ -493,7 +509,8 @@ steps:
       TF_VAR_s3_aws_secret_access_key:
         from_secret: aws_secret_access_key
       TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
-      TF_VAR_secret_key_base: ${DRONE_COMMIT}
+      TF_VAR_secret_key_base: 
+        from_secret: retrofit_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-4
       TF_VAR_session_timeout: 15
       TF_VAR_feedback_url: https://www.surveymonkey.com/r/NXXPW3G
@@ -550,7 +567,8 @@ steps:
       TF_VAR_s3_aws_secret_access_key:
         from_secret: aws_secret_access_key
       TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
-      TF_VAR_secret_key_base: ${DRONE_COMMIT}
+      TF_VAR_secret_key_base: 
+        from_secret: retrofit_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-4
       TF_VAR_session_timeout: 15
       TF_VAR_feedback_url: https://www.surveymonkey.com/r/NXXPW3G
@@ -596,6 +614,9 @@ name: retrofit-web-preprod
 trigger:
   branch:
     - staging
+  event:
+    - pull_request
+    - push
 concurrency:
   limit: 1
 
@@ -643,7 +664,8 @@ steps:
       TF_VAR_s3_aws_secret_access_key:
         from_secret: aws_secret_access_key
       TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
-      TF_VAR_secret_key_base: ${DRONE_COMMIT}
+      TF_VAR_secret_key_base: 
+        from_secret: retrofit_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-4
       TF_VAR_session_timeout: 15
       TF_VAR_feedback_url: https://www.surveymonkey.com/r/NXXPW3G
@@ -701,7 +723,8 @@ steps:
       TF_VAR_s3_aws_secret_access_key:
         from_secret: aws_secret_access_key
       TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
-      TF_VAR_secret_key_base: ${DRONE_COMMIT}
+      TF_VAR_secret_key_base: 
+        from_secret: retrofit_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-4
       TF_VAR_session_timeout: 15
       TF_VAR_feedback_url: https://www.surveymonkey.com/r/NXXPW3G
@@ -792,5 +815,12 @@ name: browserstack_username
 get:
   path: /secret/drone.global
   name: browserStackUsername
+
+---
+kind: secret
+name: retrofit_ruby_secret
+get:
+  path: /secret/drone.global
+  name: retrofitRubySecret
 
   ################################################ End Secrets #########################################################
