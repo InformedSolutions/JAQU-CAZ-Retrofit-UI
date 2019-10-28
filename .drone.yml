@@ -668,6 +668,11 @@ steps:
         from_secret: aws_secret_access_key
       TF_VAR_secret_key_base: 
         from_secret: retrofit_ruby_secret
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
       TF_VAR_google_analytics_id: UA-144774549-4
       TF_VAR_session_timeout: 15
       TF_VAR_feedback_url: https://www.surveymonkey.com/r/NXXPW3G
@@ -729,6 +734,11 @@ steps:
         from_secret: aws_secret_access_key
       TF_VAR_secret_key_base: 
         from_secret: retrofit_ruby_secret
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
       TF_VAR_google_analytics_id: UA-144774549-4
       TF_VAR_session_timeout: 15
       TF_VAR_feedback_url: https://www.surveymonkey.com/r/NXXPW3G
