@@ -626,7 +626,10 @@ steps:
   - name: plan updates in preprod
     image: hashicorp/terraform:0.12.3
     commands:
-      - apk update && apk add bash
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - TASKDEF=`aws ecs describe-services --cluster retrofit-cluster-sit --services retrofit-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - export TF_VAR_build_number=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - mkdir ~/.ssh
       - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
@@ -663,7 +666,6 @@ steps:
         from_secret: aws_access_key_id
       TF_VAR_s3_aws_secret_access_key:
         from_secret: aws_secret_access_key
-      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
       TF_VAR_secret_key_base: 
         from_secret: retrofit_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-4
@@ -685,7 +687,10 @@ steps:
   - name: plan updates in preprod
     image: hashicorp/terraform:0.12.3
     commands:
-      - apk update && apk add bash
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - TASKDEF=`aws ecs describe-services --cluster retrofit-cluster-sit --services retrofit-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - export TF_VAR_build_number=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - mkdir ~/.ssh
       - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
@@ -722,7 +727,6 @@ steps:
         from_secret: aws_access_key_id
       TF_VAR_s3_aws_secret_access_key:
         from_secret: aws_secret_access_key
-      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
       TF_VAR_secret_key_base: 
         from_secret: retrofit_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-4
