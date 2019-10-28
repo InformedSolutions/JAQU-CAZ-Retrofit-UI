@@ -384,6 +384,9 @@ steps:
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
+    when:
+      event:
+        - push
 
   # Trigger unit tests
   - name: unit tests
@@ -397,6 +400,9 @@ steps:
       - yarn install
       - cp .env.example .env
       - rspec -f d
+    when:
+      event:
+        - push
 
   # Execute integration/scenario tests
   - name: integration tests
@@ -407,6 +413,9 @@ steps:
         path: /var/run/docker.sock
     commands:
       - cucumber
+    when:
+      event:
+        - push
 
   # Invoke static code analysis through Ruby libraries
   - name: static code analysis (Ruby)
@@ -418,6 +427,9 @@ steps:
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
+    when:
+      event:
+        - push
 
   # Invoke security analysis through Ruby libraries
   - name: security tests (Ruby)
@@ -430,6 +442,9 @@ steps:
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
+    when:
+      event:
+        - push
 
   # Push built image to ECR registry
   - name: publish image to ecr
