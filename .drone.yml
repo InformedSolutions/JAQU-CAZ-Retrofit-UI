@@ -734,7 +734,7 @@ steps:
       TF_VAR_feedback_url: https://www.surveymonkey.com/r/NXXPW3G
     when:
       event:
-        - pull_request
+        - push
 
   - name: codedeploy ui pre-prod
     image: golang:alpine
