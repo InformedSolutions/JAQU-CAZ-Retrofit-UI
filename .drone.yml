@@ -48,7 +48,7 @@ steps:
     environment:
       ZAP: true
       ZAP_PROXY_URL: 'zap'
-      BASEURL_RETRO: 'https://dev-retrofit.datauploadportal.co.uk'
+      BASEURL_RETRO: 'https://dev-retrofit.datauploadportal.co.uk/''
       VALID_USERNAME: 'tester@informed.com'
       VALID_PASSWORD: 'Tester123..'
       SCREENSHOT_TYPE: 'base'
@@ -74,7 +74,7 @@ steps:
         from_secret: browserstack_username
       BS_AUTHKEY:
         from_secret: browserstack_auth_key
-      BASEURL_RETRO: 'http://retrofit-alb-dev-1428410439.eu-west-2.elb.amazonaws.com/'
+      BASEURL_RETRO: 'https://dev-retrofit.datauploadportal.co.uk/''
       VALID_USERNAME: 'edmond.chhung@informed.com'
       VALID_PASSWORD: 'Edc123.,'
       BROWSER_SET: 'mid'
@@ -113,14 +113,6 @@ volumes:
 - name: docker_sock
   host:
     path: /var/run/docker.sock
-
-services:
-  - name: zap
-    image: owasp/zap2docker-stable
-    commands:
-      - zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.disablekey=true
-    ports:
-      - 8080
 
 steps:
 
@@ -187,86 +179,6 @@ steps:
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
-
-
-  ##################
-  
-  - name: build testing tools image
-    image: docker:git
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
-    commands:
-      - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
-      - chmod 600 ~/.ssh/id_rsa
-      - touch ~/.ssh/known_hosts
-      - chmod 600 ~/.ssh/known_hosts
-      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
-      - git clone git@github.com:InformedSolutions/JAQU-CAZ-QA-selenium.git
-      - cd JAQU-CAZ-QA-selenium
-      - docker build -t test-tools-image .
-    environment:
-      GIT_PRIVATE_SSH:
-        from_secret: github_private_key
-    when:
-      event:
-        - pull_request
-
-  - name: run owasp zap tests
-    image: test-tools-image
-    pull: never
-    failure: ignore
-    environment:
-      ZAP: true
-      ZAP_PROXY_URL: 'zap'
-      BASEURL_RETRO: 'https://dev-retrofit.datauploadportal.co.uk/'
-      VALID_USERNAME: 'tester@informed.com'
-      VALID_PASSWORD: 'Tester123..'
-      SCREENSHOT_TYPE: 'base'
-      LOCATION: local
-    commands:
-      - cd JAQU-CAZ-QA-selenium
-      - cucumber -t @ZAPRETRO
-
-  - name: security warning
-    image: docker:git
-    commands:
-      - echo "OWASP ZAP tests failed. Please check outputs in case of false positives."
-    when:
-      status:
-        - failure
-    when:
-      event:
-        - pull_request
-
-    # Run end to end tests
-  - name: run end to end tests
-    image: selenium-jaqu
-    pull: never
-    environment:
-      BS_USERNAME:
-        from_secret: browserstack_username
-      BS_AUTHKEY:
-        from_secret: browserstack_auth_key
-      BASEURL_RETRO: 'https://dev-retrofit.datauploadportal.co.uk/'
-      VALID_USERNAME: 'edmond.chhung@informed.com'
-      VALID_PASSWORD: 'Edc123.,'
-      BROWSER_SET: 'mid'
-      SCREENSHOT_TYPE: 'base'
-      VCCS_USER: 'vccsservice'
-      VCCS_PASSWORD: 'Password001!'
-      BUILD: RETRO-UI-${DRONE_BUILD_NUMBER}
-      SPECTRE: false
-      LOCATION: browserstack
-    commands:
-      - cd JAQU-CAZ-QA-selenium
-      - cucumber -t @RETRO --retry 3
-    when:
-      event:
-        - pull_request
-
-  ##################
 
   # Invoke terraform scripts to ensure ecr is available for deploy step.
   - name: initialise ecr
