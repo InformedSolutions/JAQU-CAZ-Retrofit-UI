@@ -48,7 +48,7 @@ steps:
     environment:
       ZAP: true
       ZAP_PROXY_URL: 'zap'
-      BASEURL_RETRO: 'https://dev-retrofit.datauploadportal.co.uk/''
+      BASEURL_RETRO: 'https://dev-retrofit.datauploadportal.co.uk/'
       VALID_USERNAME: 'tester@informed.com'
       VALID_PASSWORD: 'Tester123..'
       SCREENSHOT_TYPE: 'base'
