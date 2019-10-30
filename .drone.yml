@@ -329,6 +329,23 @@ steps:
     when:
       event:
         - push
+
+  - name: await ecs rollout
+    image: docker
+    environment:
+      build_id_url: http://retrofit-alb-dev-1428410439.eu-west-2.elb.amazonaws.com/build_id
+      build_id: ${DRONE_BUILD_NUMBER}
+    commands:
+      - apk add curl
+      - sh build_utils/check_build_number.sh
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        - push
+
+
   ################################################# End Development Only #######################################################
 
 ---
@@ -591,6 +608,23 @@ steps:
     when:
       event:
         - push
+
+  - name: await ecs rollout
+    image: docker
+    environment:
+      build_id_url: http://retrofit-alb-sit-726319303.eu-west-2.elb.amazonaws.com/build_id
+      build_id: ${DRONE_BUILD_NUMBER}
+    commands:
+      - apk add curl
+      - sh build_utils/check_build_number.sh
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        - push
+
+
   ################################################# End SIT Steps #######################################################
 ---
 
