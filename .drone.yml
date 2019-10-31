@@ -305,7 +305,7 @@ steps:
       TF_VAR_s3_aws_secret_access_key:
         from_secret: aws_secret_access_key
       TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
-      TF_VAR_secret_key_base: 
+      TF_VAR_secret_key_base:
         from_secret: retrofit_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-4
       TF_VAR_session_timeout: 15
@@ -526,7 +526,7 @@ steps:
       TF_VAR_s3_aws_secret_access_key:
         from_secret: aws_secret_access_key
       TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
-      TF_VAR_secret_key_base: 
+      TF_VAR_secret_key_base:
         from_secret: retrofit_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-4
       TF_VAR_session_timeout: 15
@@ -584,7 +584,7 @@ steps:
       TF_VAR_s3_aws_secret_access_key:
         from_secret: aws_secret_access_key
       TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
-      TF_VAR_secret_key_base: 
+      TF_VAR_secret_key_base:
         from_secret: retrofit_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-4
       TF_VAR_session_timeout: 15
@@ -608,6 +608,7 @@ steps:
     when:
       event:
         - push
+
 
   - name: await ecs rollout
     image: docker
@@ -700,7 +701,7 @@ steps:
         from_secret: aws_access_key_id
       TF_VAR_s3_aws_secret_access_key:
         from_secret: aws_secret_access_key
-      TF_VAR_secret_key_base: 
+      TF_VAR_secret_key_base:
         from_secret: retrofit_ruby_secret
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
@@ -766,7 +767,7 @@ steps:
         from_secret: aws_access_key_id
       TF_VAR_s3_aws_secret_access_key:
         from_secret: aws_secret_access_key
-      TF_VAR_secret_key_base: 
+      TF_VAR_secret_key_base:
         from_secret: retrofit_ruby_secret
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
@@ -795,6 +796,23 @@ steps:
     when:
       event:
         - push
+
+  - name: await ecs rollout
+    image: docker
+    environment:
+      build_id_url: https://retrofit-alb-preprod-1931479843.eu-west-2.elb.amazonaws.com/build_id
+    commands:
+      - TASKDEF=`aws ecs describe-services --cluster vccs-cluster-sit --services vccs-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - export build_id=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - apk add curl
+      - sh build_utils/check_build_number.sh
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        - push
+
 
   ################################################# End Preprod Steps ############################################################
 
