@@ -284,7 +284,7 @@ steps:
       TF_VAR_s3_aws_secret_access_key:
         from_secret: aws_secret_access_key
       TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
-      TF_VAR_secret_key_base: 
+      TF_VAR_secret_key_base:
         from_secret: retrofit_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-4
       TF_VAR_session_timeout: 15
@@ -296,18 +296,42 @@ steps:
   - name: codedeploy ui dev
     image: golang:alpine
     commands:
-      - apk add --update bash python python-dev py-pip build-base
+      - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
-      - aws deploy create-deployment --application-name retrofit-codedeploy-service-dev --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name retrofit-codedeploy-service-dev --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=retrofit/dev/appspec.yaml
+      - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh .
+      - bash wait_deploy.sh $APPLICATION_NAME $DEPLOYMENT_GROUP
+      - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=$PROJECT/$DEPLOY_ENVIRONMENT/appspec.yaml
     environment:
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
         from_secret: aws_secret_access_key
       AWS_DEFAULT_REGION: eu-west-2
+      APPLICATION_NAME: retrofit-codedeploy-service-dev
+      DEPLOYMENT_GROUP: retrofit-codedeploy-service-dev
+      PROJECT: retrofit
+      DEPLOY_ENVIRONMENT: dev
+      LAMBDA_BUCKET: jaqu-projects-lambda-bucket
     when:
       event:
         - push
+
+  - name: await ecs rollout
+    image: docker
+    environment:
+      build_id_url: http://retrofit-alb-dev-1428410439.eu-west-2.elb.amazonaws.com/build_id
+      build_id: ${DRONE_BUILD_NUMBER}
+    commands:
+      - apk add curl
+      - sh build_utils/check_build_number.sh
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        - push
+
+
   ################################################# End Development Only #######################################################
 
 ---
@@ -488,7 +512,7 @@ steps:
       TF_VAR_s3_aws_secret_access_key:
         from_secret: aws_secret_access_key
       TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
-      TF_VAR_secret_key_base: 
+      TF_VAR_secret_key_base:
         from_secret: retrofit_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-4
       TF_VAR_session_timeout: 15
@@ -546,7 +570,7 @@ steps:
       TF_VAR_s3_aws_secret_access_key:
         from_secret: aws_secret_access_key
       TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
-      TF_VAR_secret_key_base: 
+      TF_VAR_secret_key_base:
         from_secret: retrofit_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-4
       TF_VAR_session_timeout: 15
@@ -558,18 +582,43 @@ steps:
   - name: codedeploy ui sit
     image: golang:alpine
     commands:
-      - apk add --update bash python python-dev py-pip build-base
+      - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
-      - aws deploy create-deployment --application-name retrofit-codedeploy-service-sit --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name retrofit-codedeploy-service-sit --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=retrofit/sit/appspec.yaml
+      - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh .
+      - bash wait_deploy.sh $APPLICATION_NAME $DEPLOYMENT_GROUP
+      - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=$PROJECT/$DEPLOY_ENVIRONMENT/appspec.yaml
     environment:
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
         from_secret: aws_secret_access_key
       AWS_DEFAULT_REGION: eu-west-2
+      APPLICATION_NAME: retrofit-codedeploy-service-sit
+      DEPLOYMENT_GROUP: retrofit-codedeploy-service-sit
+      PROJECT: retrofit
+      DEPLOY_ENVIRONMENT: sit
+      LAMBDA_BUCKET: jaqu-projects-lambda-bucket
     when:
       event:
         - push
+
+
+  - name: await ecs rollout
+    image: docker
+    environment:
+      build_id_url: http://retrofit-alb-sit-726319303.eu-west-2.elb.amazonaws.com/build_id
+      build_id: ${DRONE_BUILD_NUMBER}
+    commands:
+      - apk add curl
+      - sh build_utils/check_build_number.sh
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        - push
+
+
   ################################################# End SIT Steps #######################################################
 ---
 
@@ -645,7 +694,7 @@ steps:
         from_secret: aws_access_key_id
       TF_VAR_s3_aws_secret_access_key:
         from_secret: aws_secret_access_key
-      TF_VAR_secret_key_base: 
+      TF_VAR_secret_key_base:
         from_secret: retrofit_ruby_secret
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
@@ -711,7 +760,7 @@ steps:
         from_secret: aws_access_key_id
       TF_VAR_s3_aws_secret_access_key:
         from_secret: aws_secret_access_key
-      TF_VAR_secret_key_base: 
+      TF_VAR_secret_key_base:
         from_secret: retrofit_ruby_secret
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
@@ -728,18 +777,42 @@ steps:
   - name: codedeploy ui pre-prod
     image: golang:alpine
     commands:
-      - apk add --update bash python python-dev py-pip build-base
+      - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
-      - aws deploy create-deployment --application-name retrofit-codedeploy-service-preprod --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name retrofit-codedeploy-service-preprod --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=retrofit/preprod/appspec.yaml
+      - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh .
+      - bash wait_deploy.sh $APPLICATION_NAME $DEPLOYMENT_GROUP
+      - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=$PROJECT/$DEPLOY_ENVIRONMENT/appspec.yaml
     environment:
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
         from_secret: aws_secret_access_key
       AWS_DEFAULT_REGION: eu-west-2
+      APPLICATION_NAME: retrofit-codedeploy-service-preprod
+      DEPLOYMENT_GROUP: retrofit-codedeploy-service-preprod
+      PROJECT: retrofit
+      DEPLOY_ENVIRONMENT: preprod
+      LAMBDA_BUCKET: jaqu-projects-lambda-bucket
     when:
       event:
         - push
+
+  - name: await ecs rollout
+    image: docker
+    environment:
+      build_id_url: https://retrofit-alb-preprod-1931479843.eu-west-2.elb.amazonaws.com/build_id
+    commands:
+      - TASKDEF=`aws ecs describe-services --cluster retrofit-cluster-sit --services retrofit-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - export build_id=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - apk add curl
+      - sh build_utils/check_build_number.sh
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        - push
+
 
   ################################################# End Preprod Steps ############################################################
 ---
@@ -819,7 +892,7 @@ steps:
         from_secret: aws_access_key_id
       TF_VAR_s3_aws_secret_access_key:
         from_secret: aws_secret_access_key
-      TF_VAR_secret_key_base: 
+      TF_VAR_secret_key_base:
         from_secret: retrofit_ruby_secret
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
@@ -885,7 +958,7 @@ steps:
         from_secret: aws_access_key_id
       TF_VAR_s3_aws_secret_access_key:
         from_secret: aws_secret_access_key
-      TF_VAR_secret_key_base: 
+      TF_VAR_secret_key_base:
         from_secret: retrofit_ruby_secret
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
@@ -902,15 +975,22 @@ steps:
   - name: codedeploy ui prod
     image: golang:alpine
     commands:
-      - apk add --update bash python python-dev py-pip build-base
+      - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
-      - aws deploy create-deployment --application-name retrofit-codedeploy-service-prod --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name retrofit-codedeploy-service-prod --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=retrofit/prod/appspec.yaml
+      - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh .
+      - bash wait_deploy.sh $APPLICATION_NAME $DEPLOYMENT_GROUP
+      - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=$PROJECT/$DEPLOY_ENVIRONMENT/appspec.yaml
     environment:
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
         from_secret: aws_secret_access_key
       AWS_DEFAULT_REGION: eu-west-2
+      APPLICATION_NAME: retrofit-codedeploy-service-prod
+      DEPLOYMENT_GROUP: retrofit-codedeploy-service-prod
+      PROJECT: retrofit
+      DEPLOY_ENVIRONMENT: prod
+      LAMBDA_BUCKET: jaqu-projects-lambda-bucket
     when:
       event:
         - push
