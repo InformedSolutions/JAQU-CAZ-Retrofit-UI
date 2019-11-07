@@ -442,9 +442,9 @@ steps:
     image: test-retrofit-frontend
     pull: never
     commands:
-       - bundle audit check --update
-       - yarn audit
-       - brakeman
+      - bundle audit check --update
+      - yarn audit
+      - brakeman
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
