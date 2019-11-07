@@ -801,7 +801,13 @@ steps:
     image: docker
     environment:
       build_id_url: https://preprod-retrofit.datauploadportal.co.uk/build_id
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
     commands:
+      - apk add --update bash python python-dev py-pip build-base jq
       - TASKDEF=`aws ecs describe-services --cluster retrofit-cluster-sit --services retrofit-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export build_id=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - apk add curl
@@ -999,7 +1005,13 @@ steps:
     image: docker
     environment:
       build_id_url: https://retrofit.datauploadportal.co.uk/build_id
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
     commands:
+      - apk add --update bash python python-dev py-pip build-base jq
       - TASKDEF=`aws ecs describe-services --cluster retrofit-cluster-preprod --services retrofit-preprod-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export build_id=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - apk add curl
