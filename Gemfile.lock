@@ -400,7 +400,7 @@ DEPENDENCIES
   pry-byebug
   pry-rails
   puma
-  rails (~> 6.0)
+  rails (~> 6.0.1)
   rails-controller-testing
   rspec-rails
   rubocop-rails
