@@ -74,15 +74,13 @@ steps:
         from_secret: browserstack_username
       BS_AUTHKEY:
         from_secret: browserstack_auth_key
-      BASEURL_RETRO: 'https://dev-retrofit.datauploadportal.co.uk/'
-      VALID_USERNAME: 'edmond.chhung@informed.com'
-      VALID_PASSWORD: 'Edc123.,'
+      BASEURL_RETRO: 'https://dev-retrofit.datauploadportal.co.uk'
+      VALID_USERNAME: 'tester@informed.com'
+      VALID_PASSWORD: 'Tester123..'
       BROWSER_SET: 'mid'
-      SCREENSHOT_TYPE: 'base'
       VCCS_USER: 'vccsservice'
       VCCS_PASSWORD: 'Password001!'
       BUILD: RETRO-UI-${DRONE_BUILD_NUMBER}
-      SPECTRE: false
       LOCATION: browserstack
     commands:
       - cd JAQU-CAZ-QA-selenium
