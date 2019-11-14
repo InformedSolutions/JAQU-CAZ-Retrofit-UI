@@ -17,7 +17,11 @@ import '../src/GovUKAssets';
 import { initAll } from 'govuk-frontend/govuk/all.js';
 import initBanner from '../src/cookiesBanner/init';
 
-document.body.classList.add('js-enabled');
+document.body.className =
+    ((document.body.className) ?
+        document.body.className + ' js-enabled' :
+        'js-enabled'
+    );
 
 initAll();
 initBanner();
