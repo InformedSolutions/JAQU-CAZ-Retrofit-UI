@@ -1,10 +1,5 @@
 inherit_from: ./lib/rubocop/blacklist.yml
 
-inherit_gem:
-  rubocop-govuk:
-    - config/default.yml
-    - config/rails.yml
-
 AllCops:
   TargetRubyVersion: 2.6.5
 
@@ -31,18 +26,3 @@ Style/MixinUsage:
   Exclude:
     - 'features/step_definitions/*.rb'
 
-# `rubocop-govuk` excludes
-Style/StringLiterals:
-  Enabled: false
-
-Style/TrailingCommaInArguments:
-  Enabled: false
-
-Style/TrailingCommaInArrayLiteral:
-  Enabled: false
-
-Style/TrailingCommaInHashLiteral:
-  Enabled: false
-
-Layout/AccessModifierIndentation:
-  Enabled: false
