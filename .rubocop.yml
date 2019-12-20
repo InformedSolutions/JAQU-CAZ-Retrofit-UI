@@ -12,7 +12,7 @@ Style/GuardClause:
 Style/IfUnlessModifier:
   Enabled: false
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 99
   IgnoredPatterns: ['(\A|\s)#']
 
