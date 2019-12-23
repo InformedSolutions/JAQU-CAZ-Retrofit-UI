@@ -142,10 +142,9 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
     commands:
-      - bundle install
       - yarn install
       - cp .env.example .env
-      - rspec -f d
+      - bundle exec rspec -f d
 
   # Execute integration/scenario tests
   - name: integration tests
@@ -155,15 +154,15 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
     commands:
-      - cucumber
+      - bundle exec cucumber
 
   # Invoke static code analysis through Ruby libraries
   - name: static code analysis (Ruby)
     image: test-retrofit-frontend
     pull: never
     commands:
-      - rubocop
-      - scss-lint app/javascript
+      - bundle exec rubocop
+      - bundle exec scss-lint app/javascript
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -173,9 +172,9 @@ steps:
     image: test-retrofit-frontend
     pull: never
     commands:
-       - bundle audit check --update
+       - bundle exec bundle audit check --update
        - yarn audit
-       - brakeman
+       - bundle exec brakeman
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
