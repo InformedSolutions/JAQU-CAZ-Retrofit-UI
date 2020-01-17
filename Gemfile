@@ -3,9 +3,9 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.6.3'
+ruby '2.6.5'
 
-gem 'rails', '~> 6.0'
+gem 'rails', '~> 6.0.2'
 
 gem 'activerecord-nulldb-adapter'
 gem 'bootsnap', require: false
@@ -28,11 +28,11 @@ gem 'aws-sdk-s3'
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'dotenv-rails'
-  gem 'govuk-lint'
   gem 'haml-rails'
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'rspec-rails'
+  gem 'scss_lint-govuk', require: false
 end
 
 group :development do

@@ -21,13 +21,27 @@ describe UploadController, type: :request do
       expect(response).to have_http_status(:success)
     end
 
+    context 'when user login IP does not match request IP' do
+      let(:user) { new_user(login_ip: '0.0.0.0') }
+
+      it 'returns a redirect to login page' do
+        http_request
+        expect(response).to redirect_to(new_user_session_path)
+      end
+
+      it 'logs out the user' do
+        http_request
+        expect(controller.current_user).to be_nil
+      end
+    end
+
     context 'when session[:job] is set' do
       let(:correlation_id) { SecureRandom.uuid }
       let(:job_name) { 'name' }
 
       before do
         inject_session(job: { name: job_name, correlation_id: correlation_id })
-        allow(RegisterCheckerApi).to receive(:job_errors).and_return(['error'])
+        allow(RegisterCheckerApi).to receive(:job_errors).and_return(%w[error])
       end
 
       it 'calls RegisterCheckerApi.job_errors' do

@@ -39,7 +39,7 @@ When('I press refresh page link when api response not running or finished') do
   allow(RegisterCheckerApi).to receive(:job_status)
     .with(job_name, correlation_id).and_return('FAILURE')
   allow(RegisterCheckerApi).to receive(:job_errors)
-    .with(job_name, correlation_id).and_return(['error'])
+    .with(job_name, correlation_id).and_return(%w[error])
   click_link 'click here.'
 end
 
@@ -74,6 +74,12 @@ end
 
 Then('I should not receive a success upload email again') do
   expect(ActionMailer::Base.deliveries.size).to eq(1)
+end
+
+Then('I change my IP') do
+  allow_any_instance_of(ActionDispatch::Request)
+    .to receive(:remote_ip)
+    .and_return('4.3.2.1')
 end
 
 def empty_csv_file(filename)
