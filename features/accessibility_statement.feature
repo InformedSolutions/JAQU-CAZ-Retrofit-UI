@@ -6,5 +6,5 @@ Feature: Cookies
   Scenario: User sees accessibility statement page
     Given I am on the Sign in page
     When I press Accessibility link
-    Then I should see "Accessibility statement for Centralised Taxi and Private Hire Vehicle Database"
+    Then I should see "Accessibility statement for Retrofitted Vehicles Upload Portal"
     And I should see "Reporting accessibility problems with this website"
