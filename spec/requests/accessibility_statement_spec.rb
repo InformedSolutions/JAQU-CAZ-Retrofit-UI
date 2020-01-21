@@ -2,9 +2,9 @@
 
 require 'rails_helper'
 
-describe CookiesController, type: :request do
+describe AccessibilityStatementController, type: :request do
   describe 'GET #index' do
-    subject(:http_request) { get cookies_path }
+    subject(:http_request) { get accessibility_statement_index_path }
 
     it 'returns a success response' do
       http_request
