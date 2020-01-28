@@ -48,3 +48,15 @@ end
 When('I refresh the page') do
   visit page.current_path
 end
+
+When('I press Cookies link') do
+  within('footer.govuk-footer') do
+    click_link 'Cookies'
+  end
+end
+
+When('I press Accessibility link') do
+  within('footer.govuk-footer') do
+    click_link 'Accessibility'
+  end
+end
