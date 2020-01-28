@@ -173,7 +173,8 @@ steps:
     pull: never
     commands:
        - bundle exec bundle audit check --update
-       - yarn audit
+       # to exclude id from audit(e.g. 961) just add `--exclude 961`
+       - yarn run improved-yarn-audit
        - bundle exec brakeman
     volumes:
       - name: docker_sock
@@ -440,7 +441,8 @@ steps:
     pull: never
     commands:
       - bundle audit check --update
-      - yarn audit
+      # to exclude id from audit(e.g. 961) just add `--exclude 961`
+      - yarn run improved-yarn-audit
       - brakeman
     volumes:
       - name: docker_sock
@@ -855,6 +857,7 @@ steps:
       AWS_DEFAULT_REGION: eu-west-2
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
       - TASKDEF=`aws ecs describe-services --cluster retrofit-cluster-sit --services retrofit-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export build_id=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - apk add curl
@@ -1059,6 +1062,7 @@ steps:
       AWS_DEFAULT_REGION: eu-west-2
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
       - TASKDEF=`aws ecs describe-services --cluster retrofit-cluster-preprod --services retrofit-preprod-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export build_id=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - apk add curl
