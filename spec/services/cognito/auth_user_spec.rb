@@ -8,7 +8,7 @@ RSpec.describe Cognito::AuthUser do
   end
 
   let(:remote_ip) { '1.2.3.4' }
-  let(:username) { 'wojtek' }
+  let(:username) { 'wojtek@example.com' }
   let(:password) { 'password' }
 
   context 'with successful call' do
