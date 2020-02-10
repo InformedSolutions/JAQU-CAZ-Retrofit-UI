@@ -143,7 +143,6 @@ steps:
         path: /var/run/docker.sock
     commands:
       - yarn install
-      - cp .env.example .env
       - bundle exec rspec -f d
 
   # Execute integration/scenario tests
@@ -405,7 +404,6 @@ steps:
     commands:
       - bundle install
       - yarn install
-      - cp .env.example .env
       - rspec -f d
     when:
       event:
@@ -692,7 +690,6 @@ steps:
     commands:
       - bundle install
       - yarn install
-      - cp .env.example .env
       - rspec -f d
     when:
       event:
