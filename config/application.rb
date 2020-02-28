@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'boot'
+require_relative 'log_format'
 
 # This is not loaded in rails/all but inside active_record so add it if
 # you want your models work as expected
@@ -36,7 +37,14 @@ module CsvUploader
 
     # https://github.com/aws/aws-sdk-rails
     config.action_mailer.delivery_method = :aws_sdk
+
     # https://stackoverflow.com/questions/49086693/how-do-i-remove-mail-html-content-from-rails-logs
     config.action_mailer.logger = nil
+
+    # Use custom logging formatter so that IP addresses are removed.
+    config.logger = LogStashLogger.new(type: :stdout,
+      formatter: Formatter)
+  
+      config.log_level = :debug
   end
 end
