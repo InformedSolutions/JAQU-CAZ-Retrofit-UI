@@ -87,7 +87,7 @@ Rails.application.configure do
   config.log_level = :debug
 
   # Prepend all log lines with the following tags.
-  config.log_tags = %i[request_id remote_ip]
+  config.log_tags = %i[request_id]
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
@@ -109,15 +109,12 @@ Rails.application.configure do
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
 
-  # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = ::Logger::Formatter.new
-
   # Use custom logging formatter with tagged logging so that IP addresses are removed
   # and request IDs are retained.
   logger = LogStashLogger.new(type: :stdout)
 
   # Use tagged logging to include request id on production.
-  config.logger    = ActiveSupport::TaggedLogging.new(logger)
+  config.logger = ActiveSupport::TaggedLogging.new(logger)
 
   # Do not dump schema after migrations.
   # config.active_record.dump_schema_after_migration = false
