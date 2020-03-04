@@ -14,8 +14,11 @@ RSpec.describe RegisterCheckerApi do
     before do
       stub_request(:post, %r{register-csv-from-s3/jobs})
         .with(
-          headers: { 'Content-Type' => 'application/json', 'X-Correlation-ID' => correlation_id },
-          body: { "filename": filename, "s3Bucket": 'S3_AWS_BUCKET' }.to_json
+          headers: headers,
+          body: {
+            'filename': filename,
+            's3Bucket': ENV.fetch('S3_AWS_BUCKET', 'S3_AWS_BUCKET')
+          }.to_json
         ).to_return(status: 201, body: { jobName: job_name }.to_json)
     end
 
@@ -62,5 +65,11 @@ RSpec.describe RegisterCheckerApi do
         end
       end
     end
+  end
+
+  private
+
+  def headers
+    { 'Content-Type' => 'application/json', 'X-Correlation-ID' => correlation_id }
   end
 end
