@@ -6,7 +6,7 @@ describe UploadController, type: :request do
   let(:file_path) do
     File.join(
       'spec',
-      'fixtures', 'files', 'csv', 'CAZ-2020-01-08-5.csv'
+      'fixtures', 'files', 'csv', 'CAZ-2020-01-08.csv'
     )
   end
   let(:user) { new_user(email: 'test@example.com') }
