@@ -45,7 +45,7 @@ end
 
 #  Scenario: Upload a csv file whose name is not compliant with the naming rules
 When('I upload a csv file whose name format is invalid') do
-  attach_file(:file, empty_csv_file('CAZ-2020-01-08.csv'))
+  attach_file(:file, empty_csv_file('CAZ-2020-01.csv'))
   click_button 'Upload'
 end
 
