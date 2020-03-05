@@ -4,7 +4,6 @@ RUN apk add --no-cache --update build-base \
   linux-headers \
   tzdata \
   nodejs \
-  openssh \
   libxml2-dev \
   libxslt-dev \
   yarn \
