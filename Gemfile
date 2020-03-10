@@ -17,7 +17,6 @@ gem 'httparty'
 gem 'logstash-logger'
 gem 'puma'
 gem 'rubocop-rails'
-gem 'sass-rails'
 gem 'sdoc', require: false
 gem 'webpacker'
 
@@ -31,11 +30,13 @@ group :development, :test do
   gem 'haml-rails'
   gem 'pry-byebug'
   gem 'pry-rails'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '~> 4.0.0.beta'
   gem 'scss_lint-govuk', require: false
 end
 
 group :development do
+  gem 'better_errors'
+  gem 'binding_of_caller'
   gem 'listen'
   gem 'spring'
   gem 'spring-watcher-listen'
@@ -48,7 +49,7 @@ group :test do
   gem 'rails-controller-testing'
   gem 'selenium-webdriver'
   gem 'show_me_the_cookies'
-  gem 'simplecov', require: false
+  gem 'simplecov', '~> 0.17.1', require: false
   gem 'webdrivers'
   gem 'webmock'
 end
