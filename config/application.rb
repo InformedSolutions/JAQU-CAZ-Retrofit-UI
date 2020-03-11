@@ -22,7 +22,7 @@ module CsvUploader
     config.x.session_timeout_in_min = ENV.fetch('SESSION_TIMEOUT', 15).to_i
     # link to feedback page.
     config.x.feedback_url = ENV.fetch('FEEDBACK_URL', 'https://www.surveymonkey.com/r/NXXPW3G')
-
+    # name of service
     config.x.service_name = 'Retrofitted Vehicles Upload Portal'
     default_email = 'Useraccount.Query@defra.gov.uk'
     config.x.contact_email = default_email

@@ -5,7 +5,7 @@
 #
 class CsvUploadService < BaseService
   # regular expression for validating filename.
-  NAME_FORMAT = /^CAZ-([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))-\d+$/.freeze
+  NAME_FORMAT = /^CAZ-([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))+$/.freeze
   ##
   # Initializer method.
   #
@@ -106,7 +106,7 @@ class CsvUploadService < BaseService
   #
   # Returns a string.
   def bucket_name
-    ENV['S3_AWS_BUCKET']
+    ENV.fetch('S3_AWS_BUCKET', 'S3_AWS_BUCKET')
   end
 
   # Attributes used internally to save values.
