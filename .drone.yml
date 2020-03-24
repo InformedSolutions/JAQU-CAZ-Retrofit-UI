@@ -171,11 +171,10 @@ steps:
     image: test-retrofit-frontend
     pull: never
     commands:
-       - bundle exec bundle audit check --update
-       # to exclude id from audit(e.g. 961) just add `--exclude 961`
-       # TO DO: periodically check the fix https://www.npmjs.com/advisories/1488
-       - yarn run improved-yarn-audit --exclude 1488
-       - bundle exec brakeman
+      - bundle exec bundle audit check --update
+      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
+      - yarn run improved-yarn-audit --exclude '1488, 1179' --retry-on-network-failure
+      - bundle exec brakeman
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -442,9 +441,8 @@ steps:
     pull: never
     commands:
       - bundle audit check --update
-      # to exclude id from audit(e.g. 961) just add `--exclude 961`
-      # TO DO: periodically check the fix https://www.npmjs.com/advisories/1488
-      - yarn run improved-yarn-audit --exclude 1488
+      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
+      - yarn run improved-yarn-audit --exclude '1488, 1179' --retry-on-network-failure
       - brakeman
     volumes:
       - name: docker_sock
@@ -728,9 +726,8 @@ steps:
     pull: never
     commands:
       - bundle audit check --update
-      # to exclude id from audit(e.g. 961) just add `--exclude 961`
-      # TO DO: periodically check the fix https://www.npmjs.com/advisories/1488
-      - yarn run improved-yarn-audit --exclude 1488
+      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
+      - yarn run improved-yarn-audit --exclude '1488, 1179' --retry-on-network-failure
       - brakeman
     volumes:
       - name: docker_sock
