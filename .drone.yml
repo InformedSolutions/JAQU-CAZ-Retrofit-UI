@@ -1041,7 +1041,7 @@ steps:
       region: eu-west-2
       tags:
         - release
-		- hotfix
+        - hotfix
         - ${DRONE_BUILD_NUMBER}
       build_args:
         - secret_key_base=${DRONE_COMMIT}
