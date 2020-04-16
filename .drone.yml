@@ -29,7 +29,7 @@ steps:
         path: /var/run/docker.sock
     commands:
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -185,7 +185,7 @@ steps:
     commands:
       - apk update && apk add bash
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -479,7 +479,7 @@ steps:
     commands:
       - apk update && apk add bash
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -538,7 +538,7 @@ steps:
     commands:
       - apk update && apk add bash
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -749,7 +749,7 @@ steps:
     commands:
       - apk update && apk add bash
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -808,7 +808,7 @@ steps:
     commands:
       - apk update && apk add bash
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -897,7 +897,7 @@ steps:
     image: docker:git
     commands:
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -979,7 +979,7 @@ steps:
       - TASKDEF=`aws ecs describe-services --cluster retrofit-cluster-sit --services retrofit-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export TF_VAR_build_number=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -1045,7 +1045,7 @@ steps:
       - TASKDEF=`aws ecs describe-services --cluster retrofit-cluster-sit --services retrofit-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export TF_VAR_build_number=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -1184,7 +1184,7 @@ steps:
       - TASKDEF=`aws ecs describe-services --cluster retrofit-cluster-preprod --services retrofit-preprod-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export TF_VAR_build_number=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -1250,7 +1250,7 @@ steps:
       - TASKDEF=`aws ecs describe-services --cluster retrofit-cluster-preprod --services retrofit-preprod-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export TF_VAR_build_number=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -1325,7 +1325,7 @@ steps:
   - name: await ecs rollout
     image: docker
     environment:
-      build_id_url: https://retrofit.datauploadportal.co.uk/build_id
+      build_id_url: https://retrofit.drive-clean-air-zone.service.gov.uk/build_id
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
