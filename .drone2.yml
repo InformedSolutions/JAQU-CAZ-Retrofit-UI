@@ -137,13 +137,9 @@ steps:
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
       - git checkout iac_restructure_baseline
-      - cd terraform-iac/projects/retrofit/layers/01.api
+      - cd terraform-iac/projects/retrofit/layers/02.web
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
-      - tf init
-      - tf workspace select dev
-      - tf apply -auto-approve
-      - cd ../02.web
       - tf init
       - tf workspace select dev
       - tf apply -auto-approve
