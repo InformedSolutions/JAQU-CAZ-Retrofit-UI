@@ -172,8 +172,7 @@ steps:
     pull: never
     commands:
        - bundle exec bundle audit check --update
-       # to exclude id from audit(e.g. 961) just add `--exclude 961`
-       - yarn run improved-yarn-audit
+       - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
        - bundle exec brakeman
     volumes:
       - name: docker_sock
@@ -442,8 +441,7 @@ steps:
     pull: never
     commands:
       - bundle audit check --update
-      # to exclude id from audit(e.g. 961) just add `--exclude 961`
-      - yarn run improved-yarn-audit
+      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
       - brakeman
     volumes:
       - name: docker_sock
@@ -728,8 +726,7 @@ steps:
     pull: never
     commands:
       - bundle audit check --update
-      # to exclude id from audit(e.g. 961) just add `--exclude 961`
-      - yarn run improved-yarn-audit
+      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
       - brakeman
     volumes:
       - name: docker_sock
