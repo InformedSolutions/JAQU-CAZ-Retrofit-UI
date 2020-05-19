@@ -23,8 +23,9 @@ module ApplicationHelper
       target: '_blank',
       class: 'govuk-link',
       rel: 'noopener',
-      'area-label': "#{html_options[:'area-label'] || text} - #{I18n.t('content.external_link')}"
+      'aria-label': "#{html_options[:'aria-label'] || text} (#{I18n.t('external_link')})"
     )
-    link_to text, url, html_options
+
+    link_to "#{text} (#{I18n.t('external_link')})", url, html_options
   end
 end
