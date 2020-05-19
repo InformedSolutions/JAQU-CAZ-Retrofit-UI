@@ -722,22 +722,6 @@ steps:
       event:
         - push
 
-  # Invoke security analysis through Ruby libraries
-  - name: security tests (Ruby)
-    image: test-retrofit-frontend
-    pull: never
-    commands:
-      - bundle audit check --update
-      # to exclude id from audit(e.g. 961) just add `--exclude 961`
-      - yarn run improved-yarn-audit
-      - brakeman
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
-    when:
-      event:
-        - push
-
   # Push built image to ECR registry
   - name: publish image to ecr
     image: plugins/ecr
