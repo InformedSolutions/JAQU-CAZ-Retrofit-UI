@@ -76,10 +76,9 @@ steps:
     image: test-retrofit-frontend
     pull: never
     commands:
-       - bundle exec bundle audit check --update
-       # to exclude id from audit(e.g. 961) just add `--exclude 961`
-       - yarn run improved-yarn-audit --exclude '1179, 1500' --retry-on-network-failure
-       - bundle exec brakeman
+      - bundle audit check --update
+      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+      - brakeman
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -116,7 +115,7 @@ steps:
         from_secret: jaqu_lower_sonar_token
       sonar.ruby.coverage.reportPaths: coverage/.resultset.json
     commands:
-      - sonar-scanner        
+      - sonar-scanner
         -Dsonar.projectName=${DRONE_REPO}
         -Dsonar.host.url=$SONAR_HOST
         -Dsonar.login=$SONAR_TOKEN
