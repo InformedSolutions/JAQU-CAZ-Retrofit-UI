@@ -161,6 +161,7 @@ steps:
       TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
       GIT_PRIVATE_SSH:
         from_secret: jaqu_lower_github_private_key
+      AWS_ACCOUNT_NAME: jaqu-lower
       TF_VAR_secret_key_base:
         from_secret: retrofit_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-4
@@ -229,14 +230,14 @@ kind: secret
 name: jaqu_lower_aws_access_key_id
 get:
   path: /build-tools/drone
-  name: awsAccessKeyId
+  name: awsLowerAccessKeyId
 
 ---
 kind: secret
 name: jaqu_lower_aws_secret_access_key
 get:
   path: /build-tools/drone
-  name: awsSecretAccessKey
+  name: awsLowerSecretAccessKey
 
 
 ---
