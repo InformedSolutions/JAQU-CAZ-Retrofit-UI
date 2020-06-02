@@ -64,18 +64,18 @@ describe 'PasswordsController - POST #change', type: :request do
         expect(response).to redirect_to(confirm_reset_passwords_path)
       end
     end
-  end
 
-  context 'when `COGNITO.admin_update_user_attributes` service raises exception' do
-    before do
-      allow(Cognito::ForgotPassword::UpdateUser)
-        .to receive(:call)
-        .and_raise(Cognito::CallException.new('Something went wrong'))
-    end
+    context 'when `COGNITO.admin_update_user_attributes` service raises exception' do
+      before do
+        allow(Cognito::ForgotPassword::UpdateUser)
+          .to receive(:call)
+          .and_raise(Cognito::CallException.new('Something went wrong'))
+      end
 
-    it 'returns redirect to confirm_reset_passwords_path' do
-      http_request
-      expect(response).to redirect_to(confirm_reset_passwords_path)
+      it 'returns redirect to confirm_reset_passwords_path' do
+        http_request
+        expect(response).to redirect_to(confirm_reset_passwords_path)
+      end
     end
   end
 
