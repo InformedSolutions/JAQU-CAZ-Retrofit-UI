@@ -83,7 +83,7 @@ RSpec.describe Cognito::ForgotPassword::Reset do
 
     context 'when `CheckLimit.call` fails with proper params' do
       let(:form) { OpenStruct.new(valid?: true) }
-  
+
       context 'when service raises `Cognito::CallException` exception' do
         before do
           allow(Cognito::ForgotPassword::RateLimitVerification).to receive(:call).with(
@@ -92,12 +92,12 @@ RSpec.describe Cognito::ForgotPassword::Reset do
             Cognito::CallException.new('', 'error_path')
           )
         end
-  
+
         it 'raises the `Cognito::CallException` exception' do
           expect { service_call }.to raise_exception(Cognito::CallException)
         end
       end
-  
+
       context 'when service raises `UserNotFoundException` exception' do
         before do
           allow(COGNITO_CLIENT).to receive(:forgot_password).with(
@@ -107,7 +107,7 @@ RSpec.describe Cognito::ForgotPassword::Reset do
             Aws::CognitoIdentityProvider::Errors::UserNotFoundException.new('', 'error')
           )
         end
-  
+
         it 'returns true' do
           expect(service_call).to be_truthy
         end
@@ -115,4 +115,3 @@ RSpec.describe Cognito::ForgotPassword::Reset do
     end
   end
 end
-

@@ -202,9 +202,9 @@ class PasswordsController < ApplicationController
     )
     %w[token username].each { |attr| session["password_reset_#{attr}".to_sym] = nil }
   end
-  
+
   # username in session
   def username_in_session
     session[:password_reset_username]
-  end 
+  end
 end
