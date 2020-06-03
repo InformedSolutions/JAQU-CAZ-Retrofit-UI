@@ -15,7 +15,6 @@ module CsvUploader
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
 
-    config.autoload_paths << Rails.root.join('lib')
     config.eager_load_paths << Rails.root.join('lib')
 
     # timeout the user session without activity.
@@ -36,6 +35,7 @@ module CsvUploader
 
     # https://github.com/aws/aws-sdk-rails
     config.action_mailer.delivery_method = :aws_sdk
+
     # https://stackoverflow.com/questions/49086693/how-do-i-remove-mail-html-content-from-rails-logs
     config.action_mailer.logger = nil
   end
