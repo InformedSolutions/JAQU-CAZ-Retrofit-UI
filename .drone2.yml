@@ -364,7 +364,7 @@ steps:
       TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
       GIT_PRIVATE_SSH:
         from_secret: jaqu_lower_github_private_key
-      AWS_ACCOUNT_NAME: jaqu-lower
+      AWS_ACCOUNT_NAME: jaqu-controlled
       TF_VAR_secret_key_base:
         from_secret: retrofit_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-4
@@ -453,7 +453,7 @@ steps:
   - name: await ecs rollout
     image: docker
     environment:
-      build_id_url: https://dev2-retrofit.datauploadportal.co.uk/build_id
+      build_id_url: https://st2-retrofit.datauploadportal.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
