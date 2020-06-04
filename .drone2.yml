@@ -88,9 +88,9 @@ steps:
     image: plugins/ecr
     settings:
       access_key:
-        from_secret: aws_access_key_id
+        from_secret: jaqu_lower_service_access_key_id
       secret_key:
-        from_secret: aws_secret_access_key
+        from_secret: jaqu_lower_service_secret_access_key
       repo: 311075478274.dkr.ecr.eu-west-2.amazonaws.com/retrofit-web
       registry: 311075478274.dkr.ecr.eu-west-2.amazonaws.com
       dockerfile: Dockerfile.build
@@ -215,6 +215,258 @@ steps:
 
   ################################################# End Development Only #######################################################
 
+---
+
+  ################################################### ST Environment Steps ########################################################
+
+kind: pipeline
+type: docker
+name: retrofit-web-st
+
+trigger:
+  branch:
+    - iac-restructure-controlled-st
+  event:
+    - pull_request
+    - push
+concurrency:
+  limit: 1
+
+volumes:
+- name: docker_sock
+  host:
+    path: /var/run/docker.sock
+
+steps:
+
+  # Clean agent images and containers to prevent disk space overuse
+  - name: clean agent
+    image: docker
+    commands:
+    - docker system prune -f
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Build docker images
+  - name: build
+    image: docker
+    commands:
+    - docker build -f Dockerfile.test -t test-retrofit-frontend:latest .
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Trigger unit tests
+  - name: unit tests
+    image: test-retrofit-frontend
+    pull: never
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - yarn install
+      - bundle exec rspec -f d
+
+  # Execute integration/scenario tests
+  - name: integration tests
+    image: test-retrofit-frontend
+    pull: never
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - bundle exec cucumber
+
+  # Invoke static code analysis through Ruby libraries
+  - name: static code analysis (Ruby)
+    image: test-retrofit-frontend
+    pull: never
+    commands:
+      - bundle exec rubocop
+      - bundle exec scss-lint app/javascript
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Invoke security analysis through Ruby libraries
+  - name: security tests (Ruby)
+    image: test-retrofit-frontend
+    pull: never
+    commands:
+      - bundle audit check --update
+      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+      - brakeman
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Push built image to ECR registry
+  - name: publish st image to ecr
+    image: plugins/ecr
+    settings:
+      access_key:
+        from_secret: aws_controlled_access_key_id
+      secret_key:
+        from_secret: aws_controlled_secret_access_key
+      repo: 311075478274.dkr.ecr.eu-west-2.amazonaws.com/retrofit-web
+      registry: 311075478274.dkr.ecr.eu-west-2.amazonaws.com
+      dockerfile: Dockerfile.build
+      region: eu-west-2
+      tags:
+        - latest
+        - ${DRONE_BUILD_NUMBER}
+      build_args:
+        - secret_key_base=${DRONE_COMMIT}
+        - aws_region=eu-west-2
+    when:
+      event:
+        - push
+
+
+  # Invoke terraform scripts with tagged image number
+  - name: plan updates in st
+    image: hashicorp/terraform:0.12.3
+    commands:
+      - apk update && apk add bash
+      - mkdir ~/.ssh
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
+      - cd JAQU-CAZ-IAC
+      - git checkout iac_restructure_baseline
+      - cd terraform-iac/projects/retrofit/layers/02.web
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace select st || tf workspace new st
+      - tf plan
+    environment:
+      TF_VAR_access_key:
+        from_secret: jaqu_controlled_aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: jaqu_controlled_aws_secret_access_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: jaqu_controlled_service_aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: jaqu_controlled_service_aws_secret_access_key
+      TF_VAR_master_access_key:
+        from_secret: jaqu_master_aws_access_key_id
+      TF_VAR_master_secret_key:
+        from_secret: jaqu_master_aws_secret_access_key
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_controlled_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_controlled_aws_secret_access_key
+      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
+      GIT_PRIVATE_SSH:
+        from_secret: jaqu_lower_github_private_key
+      AWS_ACCOUNT_NAME: jaqu-lower
+      TF_VAR_secret_key_base:
+        from_secret: retrofit_ruby_secret
+      TF_VAR_google_analytics_id: UA-144774549-4
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://www.surveymonkey.com/r/NXXPW3G
+    when:
+      event:
+        - push
+
+  # Invoke terraform scripts with tagged image number
+  - name: deploy to st
+    image: hashicorp/terraform:0.12.3
+    commands:
+      - apk update && apk add bash
+      - mkdir ~/.ssh
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
+      - cd JAQU-CAZ-IAC
+      - git checkout iac_restructure_baseline
+      - cd terraform-iac/projects/retrofit/layers/02.web
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace  select st || tf workspace new st
+      - tf apply -auto-approve
+    environment:
+      TF_VAR_access_key:
+        from_secret: jaqu_controlled_aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: jaqu_controlled_aws_secret_access_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: jaqu_controlled_service_aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: jaqu_controlled_service_aws_secret_access_key
+      TF_VAR_master_access_key:
+        from_secret: jaqu_master_aws_access_key_id
+      TF_VAR_master_secret_key:
+        from_secret: jaqu_master_aws_secret_access_key
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_controlled_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_controlled_aws_secret_access_key
+      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
+      GIT_PRIVATE_SSH:
+        from_secret: jaqu_lower_github_private_key
+      AWS_ACCOUNT_NAME: jaqu-controlled
+      TF_VAR_secret_key_base:
+        from_secret: retrofit_ruby_secret
+      TF_VAR_google_analytics_id: UA-144774549-4
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://www.surveymonkey.com/r/NXXPW3G
+    when:
+      event:
+        - push
+
+  - name: codedeploy ui dev
+    image: golang:alpine
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - mkdir ~/.aws
+      - echo -e "[profile target_acc]\nrole_arn = $AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
+      - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh . --profile target_acc
+      - bash wait_deploy.sh $APPLICATION_NAME $DEPLOYMENT_GROUP
+      - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=$LAMBDA_BUCKET,bundleType=yaml,key=$PROJECT/$DEPLOY_ENVIRONMENT/appspec.yaml --profile target_acc
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_controlled_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_controlled_aws_secret_access_key
+      AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
+      AWS_DEFAULT_REGION: eu-west-2
+      APPLICATION_NAME: retrofit-codedeploy-service-st
+      DEPLOYMENT_GROUP: retrofit-codedeploy-service-st
+      PROJECT: retrofit
+      DEPLOY_ENVIRONMENT: st
+      LAMBDA_BUCKET: jaqu-shared-project-lambda-bucket
+    when:
+      event:
+        - push
+
+  - name: await ecs rollout
+    image: docker
+    environment:
+      build_id_url: https://dev2-retrofit.datauploadportal.co.uk/build_id
+      build_id: ${DRONE_BUILD_NUMBER}
+    commands:
+      - apk add curl
+      - sh build_utils/check_build_number.sh
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        - push
+
+
+  ################################################# End of ST Environment #######################################################
 
 
 
@@ -245,14 +497,43 @@ kind: secret
 name: jaqu_lower_service_aws_access_key_id
 get:
   path: /build-tools/drone
-  name: awsServiceAccessKeyId
+  name: awsLowerServiceAccessKeyId
 
 ---
 kind: secret
 name: jaqu_lower_service_aws_secret_access_key
 get:
   path: /build-tools/drone
-  name: awsServiceSecretAccessKey
+  name: awsLowerServiceSecretAccessKey
+
+---
+kind: secret
+name: jaqu_controlled_aws_access_key_id
+get:
+  path: /build-tools/drone
+  name: awsControlledAccessKeyId
+
+---
+kind: secret
+name: jaqu_controlled_aws_secret_access_key
+get:
+  path: /build-tools/drone
+  name: awsControlledSecretAccessKey
+
+
+---
+kind: secret
+name: jaqu_controlled_service_aws_access_key_id
+get:
+  path: /build-tools/drone
+  name: awsControlledServiceAccessKeyId
+
+---
+kind: secret
+name: jaqu_controlled_service_aws_secret_access_key
+get:
+  path: /build-tools/drone
+  name: awsControlledServiceSecretAccessKey
 
 ---
 kind: secret
