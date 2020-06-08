@@ -14,5 +14,4 @@ AMAZON_S3_CLIENT = Aws::S3::Resource.new(
   region: ENV.fetch('S3_AWS_REGION', 'S3_AWS_REGION'),
   credentials: credentials
 )
-
 # :nocov:
