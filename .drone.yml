@@ -467,6 +467,7 @@ steps:
         - ${DRONE_BUILD_NUMBER}
       build_args:
         - secret_key_base=${DRONE_COMMIT}
+        - skip_aws_credentials=true
     when:
       event:
         - push
