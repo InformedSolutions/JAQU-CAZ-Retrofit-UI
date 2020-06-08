@@ -8,8 +8,6 @@ ENV AWS_REGION=eu-west-2
 ENV S3_AWS_REGION=eu-west-2
 ARG secret_key_base
 ENV SECRET_KEY_BASE=$secret_key_base
-ARG skip_aws_credentials
-ENV SKIP_AWS_CREDENTIALS=skip_aws_credentials
 
 RUN apk add --no-cache --update build-base linux-headers tzdata nodejs \
   openssh libxml2-dev libxslt-dev yarn curl-dev sqlite-dev \
