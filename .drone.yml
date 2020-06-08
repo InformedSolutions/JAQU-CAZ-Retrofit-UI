@@ -315,7 +315,7 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker
+    image: alpine:3.11.6
     environment:
       build_id_url: https://dev-retrofit.datauploadportal.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
@@ -467,6 +467,7 @@ steps:
         - ${DRONE_BUILD_NUMBER}
       build_args:
         - secret_key_base=${DRONE_COMMIT}
+        - skip_aws_credentials=true
     when:
       event:
         - push
@@ -606,7 +607,7 @@ steps:
 
 
   - name: await ecs rollout
-    image: docker
+    image: alpine:3.11.6
     environment:
       build_id_url: https://st-retrofit.datauploadportal.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
@@ -891,7 +892,7 @@ steps:
 
 
   - name: await ecs rollout
-    image: docker
+    image: alpine:3.11.6
     environment:
       build_id_url: https://sit-retrofit.datauploadportal.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
@@ -1131,7 +1132,7 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker
+    image: alpine:3.11.6
     environment:
       build_id_url: https://preprod-retrofit.datauploadportal.co.uk/build_id
       AWS_ACCESS_KEY_ID:
@@ -1336,7 +1337,7 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker
+    image: alpine:3.11.6
     environment:
       build_id_url: https://retrofit.drive-clean-air-zone.service.gov.uk/build_id
       AWS_ACCESS_KEY_ID:
