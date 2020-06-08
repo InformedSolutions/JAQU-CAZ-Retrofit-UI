@@ -29,7 +29,12 @@ module Cognito
 
     # The user pool ID for the user pool where we want to update user attributes
     def user_pool_id
-      ENV['AWS_COGNITO_USER_POOL_ID']
+      if ENV['AWS_COGNITO_USER_POOL_ID'].start_with?('arn:') 
+        # This assumes a fixed cognito pool ID length of 19 chars
+        test = ENV['AWS_COGNITO_USER_POOL_ID'].reverse[0...19].reverse
+      else
+        ENV['AWS_COGNITO_USER_POOL_ID']
+      end
     end
   end
 end
