@@ -12,7 +12,11 @@ secret_key = ENV.fetch('SES_SECRET_ACCESS_KEY') do
 end
 # :nocov:
 
-creds = Aws::Credentials.new(access_id, secret_key)
+creds = if ENV['SES_ACCESS_KEY_ID'] || !Rails.env.production?
+          Aws::Credentials.new(access_id, secret_key)
+        else
+          Aws::ECSCredentials.new({ ip_address: '169.254.170.2' })
+        end
 
 # default to Ireland, as SES is not supported in London
 region = ENV.fetch('SES_REGION', 'eu-west-1')
