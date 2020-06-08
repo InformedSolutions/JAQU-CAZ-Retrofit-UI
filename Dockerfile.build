@@ -33,5 +33,6 @@ RUN yarn install --frozen-lockfile --non-interactive \
  && yarn cache clean \
  && rm -rf /home/app/node_modules
 
+RUN unset SKIP_AWS_CREDENTIALS
 EXPOSE 3000
 CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3000"]
