@@ -6,10 +6,9 @@ ENV RAILS_SERVE_STATIC_FILES true
 ENV NODE_ENV production
 ENV AWS_REGION=eu-west-2
 ENV S3_AWS_REGION=eu-west-2
+ENV S3_AWS_ACCESS_KEY_ID=S3_AWS_ACCESS_KEY_ID
 ARG secret_key_base
 ENV SECRET_KEY_BASE=$secret_key_base
-ARG skip_aws_credentials
-ENV SKIP_AWS_CREDENTIALS=skip_aws_credentials
 
 RUN apk add --no-cache --update build-base linux-headers tzdata nodejs \
   openssh libxml2-dev libxslt-dev yarn curl-dev sqlite-dev \
@@ -33,6 +32,5 @@ RUN yarn install --frozen-lockfile --non-interactive \
  && yarn cache clean \
  && rm -rf /home/app/node_modules
 
-RUN unset SKIP_AWS_CREDENTIALS
 EXPOSE 3000
 CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3000"]
