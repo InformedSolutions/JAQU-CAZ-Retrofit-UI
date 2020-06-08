@@ -12,7 +12,7 @@ unless ENV['SKIP_AWS_CREDENTIALS']
     ENV.fetch('AWS_SECRET_ACCESS_KEY', 'example_key')
   end
 
-  credentials = if ENV['SES_ACCESS_KEY_ID'] || !Rails.env.production?
+  credentials = if ENV['SES_ACCESS_KEY_ID']
                   Aws::Credentials.new(access_id, secret_key)
                 else
                   Aws::ECSCredentials.new({ ip_address: '169.254.170.2' })
