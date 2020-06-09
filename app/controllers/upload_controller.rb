@@ -30,7 +30,9 @@ class UploadController < ApplicationController
     Rails.logger.info "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI:"
     Rails.logger.info ENV['AWS_CONTAINER_CREDENTIALS_RELATIVE_URI']
     
-    Rails.logger.info Aws::ECSCredentials.new({ ip_address: '169.254.170.2' })
+    unless ENV['S3_AWS_ACCESS_KEY_ID']
+      Rails.logger.info Aws::ECSCredentials.new({ ip_address: '169.254.170.2' })
+    end
 
     CsvUploadService.call(file: file, user: current_user)
     correlation_id = SecureRandom.uuid
