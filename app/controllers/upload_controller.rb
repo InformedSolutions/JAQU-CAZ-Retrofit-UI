@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# :nocov:
+
 ##
 # Controller class for uploading a csv file.
 #
@@ -157,3 +159,5 @@ class UploadController < ApplicationController
     Time.current.strftime(Rails.configuration.x.time_format)
   end
 end
+
+# :nocov:
