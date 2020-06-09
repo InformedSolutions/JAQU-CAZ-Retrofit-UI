@@ -25,13 +25,12 @@ class UploadController < ApplicationController
   # * +current_user+ - an instance of the User class
   #
   def import
-    Rails.logger.info "Access key:"
+    Rails.logger.info 'Access key:'
     Rails.logger.info ENV['AWS_ACCESS_KEY']
-    Rails.logger.info "Access key secret:"
+    Rails.logger.info 'Access key secret:'
     Rails.logger.info ENV['AWS_SECRET_KEY']
-    Rails.logger.info "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI:"
+    Rails.logger.info 'AWS_CONTAINER_CREDENTIALS_RELATIVE_URI:'
     Rails.logger.info ENV['AWS_CONTAINER_CREDENTIALS_RELATIVE_URI']
-    
     unless ENV['S3_AWS_ACCESS_KEY_ID']
       Rails.logger.info Aws::ECSCredentials.new({ ip_address: '169.254.170.2' })
     end
