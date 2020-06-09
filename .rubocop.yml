@@ -30,6 +30,7 @@ Metrics/BlockLength:
   Exclude:
     - 'config/routes.rb'
     - 'config/environments/*.rb'
+    - 'app/controllers/upload_controller.rb'
 
 Style/MixinUsage:
   Exclude:
