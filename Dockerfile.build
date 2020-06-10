@@ -38,8 +38,10 @@ RUN yarn install --frozen-lockfile --non-interactive \
 
 
 # Unset access key stubs for inspection of credentials at runtime
-ENV S3_AWS_ACCESS_KEY_ID=
-ENV S3_AWS_SECRET_ACCESS_KEY=
+RUN unset S3_AWS_ACCESS_KEY_ID
+RUN unset S3_AWS_SECRET_ACCESS_KEY
+RUN unset SES_ACCESS_KEY_ID
+RUN unset SES_SECRET_ACCESS_KEY
 
 EXPOSE 3000
 CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3000"]
