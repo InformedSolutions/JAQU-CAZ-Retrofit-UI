@@ -11,6 +11,8 @@ ENV SECRET_KEY_BASE=$secret_key_base
 
 ENV S3_AWS_ACCESS_KEY_ID=STUB_FOR_YARN_INSTALL
 ENV S3_AWS_SECRET_ACCESS_KEY=STUB_FOR_YARN_INSTALL
+ENV SES_ACCESS_KEY_ID=STUB_FOR_YARN_INSTALL
+ENV SES_SECRET_ACCESS_KEY=STUB_FOR_YARN_INSTALL
 
 RUN apk add --no-cache --update build-base linux-headers tzdata nodejs \
   openssh libxml2-dev libxslt-dev yarn curl-dev sqlite-dev \
