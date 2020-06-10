@@ -9,6 +9,9 @@ ENV S3_AWS_REGION=eu-west-2
 ARG secret_key_base
 ENV SECRET_KEY_BASE=$secret_key_base
 
+ENV S3_AWS_ACCESS_KEY_ID=STUB_FOR_YARN_INSTALL
+ENV S3_AWS_SECRET_ACCESS_KEY=STUB_FOR_YARN_INSTALL
+
 RUN apk add --no-cache --update build-base linux-headers tzdata nodejs \
   openssh libxml2-dev libxslt-dev yarn curl-dev sqlite-dev \
   && PACKAGES="ca-certificates procps curl pcre libstdc++ libexecinfo" \
@@ -30,6 +33,11 @@ RUN yarn install --frozen-lockfile --non-interactive \
  && bundle exec rails assets:precompile \
  && yarn cache clean \
  && rm -rf /home/app/node_modules
+
+
+# Unset access key stubs for inspection of credentials at runtime
+ENV S3_AWS_ACCESS_KEY_ID=
+ENV S3_AWS_SECRET_ACCESS_KEY=
 
 EXPOSE 3000
 CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3000"]
