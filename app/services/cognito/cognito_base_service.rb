@@ -21,5 +21,11 @@ module Cognito
     def log_invalid_params(msg)
       Rails.logger.error "[#{self.class.name}] Invalid form params - #{msg}"
     end
+
+    private
+
+    def client
+      Cognito::Client.new
+    end
   end
 end
