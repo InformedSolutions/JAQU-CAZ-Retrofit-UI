@@ -315,7 +315,7 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker
+    image: alpine:3.11.6
     environment:
       build_id_url: https://dev-retrofit.datauploadportal.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
@@ -606,7 +606,7 @@ steps:
 
 
   - name: await ecs rollout
-    image: docker
+    image: alpine:3.11.6
     environment:
       build_id_url: https://st-retrofit.datauploadportal.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
@@ -619,6 +619,46 @@ steps:
     when:
       event:
         - push
+
+  - name: build testing tools image
+    image: docker:git
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - mkdir ~/.ssh
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-QA-selenium.git
+      - cd JAQU-CAZ-QA-selenium
+      - docker build -t test-tools-image .
+    environment:
+      GIT_PRIVATE_SSH:
+        from_secret: github_private_key
+
+    # Run end to end tests
+  - name: run end to end tests
+    image: selenium-jaqu
+    pull: never
+    environment:
+      BS_USERNAME:
+        from_secret: browserstack_username
+      BS_AUTHKEY:
+        from_secret: browserstack_auth_key
+      BASEURL_RETRO: 'https://st-retrofit.datauploadportal.co.uk'
+      VALID_USERNAME: 'tester@informed.com'
+      VALID_PASSWORD: 'Tester123..'
+      BROWSER_SET: 'min'
+      VCCS_USER: 'vccsservice'
+      VCCS_PASSWORD: 'Password001!'
+      BUILD: RETRO-UI-${DRONE_BUILD_NUMBER}
+      LOCATION: browserstack
+    commands:
+      - cd JAQU-CAZ-QA-selenium
+      - cucumber -t @RETRO --guess --retry 3
 
 
   ################################################# End ST Steps #######################################################
@@ -891,7 +931,7 @@ steps:
 
 
   - name: await ecs rollout
-    image: docker
+    image: alpine:3.11.6
     environment:
       build_id_url: https://sit-retrofit.datauploadportal.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
@@ -1131,7 +1171,7 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker
+    image: alpine:3.11.6
     environment:
       build_id_url: https://preprod-retrofit.datauploadportal.co.uk/build_id
       AWS_ACCESS_KEY_ID:
@@ -1336,7 +1376,7 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker
+    image: alpine:3.11.6
     environment:
       build_id_url: https://retrofit.drive-clean-air-zone.service.gov.uk/build_id
       AWS_ACCESS_KEY_ID:
