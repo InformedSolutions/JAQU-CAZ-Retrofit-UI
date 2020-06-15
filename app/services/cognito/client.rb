@@ -1,32 +1,54 @@
+# frozen_string_literal: true
+
 module Cognito
   class Client
+    include Singleton
+
+    attr_reader :client
+
     def initialize
-      Aws::CognitoIdentityProvider::Client.new(credentials)
+      @client = Aws::CognitoIdentityProvider::Client.new(credentials: credentials)
+    end
+
+    def method_missing(method, *args, &block)
+      return client.send(method, *args, &block) if client.respond_to?(method)
+
+      super
+    rescue Aws::CognitoIdentityProvider::Errors::ResourceNotFoundException
+      # reload credentials
+      @client = Aws::CognitoIdentityProvider::Client.new(credentials: credentials)
+      # retry
+      client.send(method, *args, &block)
+    end
+
+    def respond_to_missing?(method, include_private = false)
+      client.respond_to?(method) || super
     end
 
     private
 
     def credentials
-      if key_credentials_provided?
-        key_credentials
-      else
+      if secret_manager_credentials_provided?
         secret_manager_credentials
+      else
+        key_credentials
       end
     end
 
-    def key_credentials_provided?
-      ENV['AWS_SECRET_KEY'] && ENV['AWS_SECRET_ACCESS_KEY']
+    def secret_manager_credentials_provided?
+      ENV['COGNITO_SDK_SECRET']
     end
 
     def key_credentials
       Aws::Credentials.new(
-        ENV.fetch('AWS_SECRET_KEY', 'AWS_SECRET_KEY'),
+        ENV.fetch('AWS_ACCESS_KEY_ID', 'AWS_ACCESS_KEY_ID'),
         ENV.fetch('AWS_SECRET_ACCESS_KEY', 'AWS_SECRET_ACCESS_KEY')
       )
     end
 
     def secret_manager_credentials
-      secret_manager_client.get_secret_value(secret_id: secret_name)
+      secret_manager_client
+        .get_secret_value(secret_id: ENV['COGNITO_SDK_SECRET'])
     end
 
     def secret_manager_client
@@ -34,10 +56,6 @@ module Cognito
         credentials: Aws::ECSCredentials.new({ ip_address: '169.254.170.2' }),
         region: ENV['AWS_REGION']
       )
-    end
-
-    def secret_name
-      ENV['COGNITO_SDK_SECRET']
     end
   end
 end

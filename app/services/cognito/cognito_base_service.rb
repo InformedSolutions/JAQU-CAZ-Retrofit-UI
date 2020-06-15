@@ -25,7 +25,7 @@ module Cognito
     private
 
     def client
-      Cognito::Client.new
+      Cognito::Client.instance
     end
   end
 end
