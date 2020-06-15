@@ -49,6 +49,8 @@ steps:
     commands:
       - yarn install
       - bundle exec rspec -f d
+    environment:
+      AWS_REGION: eu-west-2
 
   # Execute integration/scenario tests
   - name: integration tests
@@ -59,6 +61,8 @@ steps:
         path: /var/run/docker.sock
     commands:
       - bundle exec cucumber
+    environment:
+      AWS_REGION: eu-west-2
 
   # Invoke static code analysis through Ruby libraries
   - name: static code analysis (Ruby)
@@ -70,6 +74,8 @@ steps:
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
+    environment:
+      AWS_REGION: eu-west-2
 
   # Invoke security analysis through Ruby libraries
   - name: security tests (Ruby)
@@ -82,6 +88,8 @@ steps:
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
+    environment:
+      AWS_REGION: eu-west-2
 
   # Push built image to ECR registry
   - name: publish image to ecr
