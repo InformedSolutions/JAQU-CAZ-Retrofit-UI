@@ -10,11 +10,7 @@ RSpec.describe Cognito::ForgotPassword::Reset do
   let(:form) { OpenStruct.new(valid?: true) }
 
   before do
-    allow(ResetPasswordForm).to receive(:new).with(username).and_return(form)
-    allow(Cognito::ForgotPassword::RateLimitVerification).to receive(:call).with(
-      username: username
-    ).and_return(true)
-    allow(COGNITO_CLIENT).to receive(:forgot_password).with(
+    allow(Cognito::Client.instance).to receive(:forgot_password).with(
       client_id: anything,
       username: username
     ).and_return(cognito_response)
@@ -31,7 +27,7 @@ RSpec.describe Cognito::ForgotPassword::Reset do
     end
 
     it 'calls Cognito' do
-      expect(COGNITO_CLIENT).to receive(:forgot_password)
+      expect(Cognito::Client.instance).to receive(:forgot_password)
       service_call
     end
   end
@@ -53,7 +49,7 @@ RSpec.describe Cognito::ForgotPassword::Reset do
 
     context 'when service raises `ServiceError` exception' do
       before do
-        allow(COGNITO_CLIENT).to receive(:forgot_password).with(
+        allow(Cognito::Client.instance).to receive(:forgot_password).with(
           client_id: anything,
           username: username
         ).and_raise(
@@ -68,7 +64,7 @@ RSpec.describe Cognito::ForgotPassword::Reset do
 
     context 'when service raises `UserNotFoundException` exception' do
       before do
-        allow(COGNITO_CLIENT).to receive(:forgot_password).with(
+        allow(Cognito::Client.instance).to receive(:forgot_password).with(
           client_id: anything,
           username: username
         ).and_raise(

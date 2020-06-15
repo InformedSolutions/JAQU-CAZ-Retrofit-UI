@@ -22,14 +22,10 @@ module Cognito
       Rails.logger.error "[#{self.class.name}] Invalid form params - #{msg}"
     end
 
-    # Returns a string, eg. '/passwords/confirm_reset'
-    def forgot_password_error_path
-      Rails.application.routes.url_helpers.confirm_reset_passwords_path
-    end
+    private
 
-    # The user pool ID for the user pool where we want to update user attributes
-    def user_pool_id
-      ENV['AWS_COGNITO_USER_POOL_ID'].split('/').last
+    def client
+      Cognito::Client.instance
     end
   end
 end

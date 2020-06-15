@@ -22,6 +22,7 @@ gem 'webpacker'
 gem 'aws-sdk-cognitoidentityprovider'
 gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'
+gem 'aws-sdk-secretsmanager'
 
 group :development, :test do
   gem 'byebug'
