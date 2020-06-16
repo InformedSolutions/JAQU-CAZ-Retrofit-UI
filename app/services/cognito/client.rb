@@ -50,16 +50,32 @@ module Cognito
 
     def secret_manager_credentials
       Rails.logger.info 'Getting credentials from SecretsManager'
-      secret_manager_client
-        .get_secret_value(secret_id: ENV['COGNITO_SDK_SECRET'])
+      c = secret_manager_client.get_secret_value(secret_id: ENV['COGNITO_SDK_SECRET'])
+      Rails.logger.info 'Credentials from SecretsManager loaded.'
+      c
     end
 
     def secret_manager_client
-      Rails.logger.info 'Loading SecretsManager cCanlient'
+      Rails.logger.info 'Loading SecretsManager Client'
       Aws::SecretsManager::Client.new(
-        credentials: Aws::ECSCredentials.new({ ip_address: '169.254.170.2' }),
-        region: ENV['AWS_REGION']
+        region: ENV['AWS_REGION'],
+        credentials: ecs_credentials
       )
+    end
+
+    def ecs_credentials
+      Rails.logger.info 'Loading SecretsManager Client'
+      response = Aws::ECSCredentials.new({ ip_address: '169.254.170.2' })
+      Rails.logger.info 'ECSCredentials response:'
+      log_ecs_response(response)
+      response
+    end
+
+    def log_ecs_response(response)
+      Rails.logger.info "AccessKeyId: #{response['AccessKeyId'].last(4)}"
+      Rails.logger.info "Expiration: #{response['Expiration']}"
+      Rails.logger.info "SecretAccessKey: #{response['SecretAccessKey'].last(4)}"
+      Rails.logger.info "Token: #{response['Token'].last(4)}"
     end
   end
 end
