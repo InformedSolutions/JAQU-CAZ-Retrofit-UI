@@ -66,16 +66,14 @@ module Cognito
     def ecs_credentials
       Rails.logger.info 'Loading SecretsManager Client'
       response = Aws::ECSCredentials.new({ ip_address: '169.254.170.2' })
-      Rails.logger.info 'ECSCredentials response:'
-      log_ecs_response(response)
+      log_ecs_response(response.credentials)
       response
     end
 
-    def log_ecs_response(response)
-      Rails.logger.info "AccessKeyId: #{response['AccessKeyId'].last(4)}"
-      Rails.logger.info "Expiration: #{response['Expiration']}"
-      Rails.logger.info "SecretAccessKey: #{response['SecretAccessKey'].last(4)}"
-      Rails.logger.info "Token: #{response['Token'].last(4)}"
+    def log_ecs_response(credentials)
+      Rails.logger.info 'ECSCredentials response:'
+      Rails.logger.info "AccessKeyId: #{credentials.access_key_id.to_s.last(4)}"
+      Rails.logger.info "SecretAccessKey: #{credentials.secret_access_key.to_s.last(4)}"
     end
   end
 end
