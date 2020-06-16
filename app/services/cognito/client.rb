@@ -51,8 +51,8 @@ module Cognito
     def secret_manager_credentials
       Rails.logger.info 'Getting credentials from SecretsManager'
       c = secret_manager_client.get_secret_value(secret_id: ENV['COGNITO_SDK_SECRET'])
-      Rails.logger.info 'Credentials from SecretsManager loaded.'
-      c
+      Rails.logger.info "Credentials from SecretsManager loaded: #{c}"
+      JSON.parse c.secret_string
     end
 
     def secret_manager_client
