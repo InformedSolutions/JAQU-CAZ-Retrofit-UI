@@ -11,7 +11,7 @@ module Cognito
     end
 
     def method_missing(method, *args, &block)
-      return client.send(method, *args, &block) if client.respond_to?(method)
+      return client.send(method, *args, &block) if respond_to_missing?(method)
 
       super
     rescue Aws::CognitoIdentityProvider::Errors::ResourceNotFoundException
