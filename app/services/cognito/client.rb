@@ -15,6 +15,7 @@ module Cognito
 
       super
     rescue Aws::CognitoIdentityProvider::Errors::ResourceNotFoundException
+      Rails.logger.info 'Error: get new credentials and retry action'
       # reload credentials
       @client = Aws::CognitoIdentityProvider::Client.new(credentials: credentials)
       # retry
@@ -40,6 +41,7 @@ module Cognito
     end
 
     def key_credentials
+      Rails.logger.info 'Getting credentials from ENV'
       Aws::Credentials.new(
         ENV.fetch('AWS_ACCESS_KEY_ID', 'AWS_ACCESS_KEY_ID'),
         ENV.fetch('AWS_SECRET_ACCESS_KEY', 'AWS_SECRET_ACCESS_KEY')
@@ -47,11 +49,13 @@ module Cognito
     end
 
     def secret_manager_credentials
+      Rails.logger.info 'Getting credentials from SecretsManager'
       secret_manager_client
         .get_secret_value(secret_id: ENV['COGNITO_SDK_SECRET'])
     end
 
     def secret_manager_client
+      Rails.logger.info 'Loading SecretsManager cCanlient'
       Aws::SecretsManager::Client.new(
         credentials: Aws::ECSCredentials.new({ ip_address: '169.254.170.2' }),
         region: ENV['AWS_REGION']
