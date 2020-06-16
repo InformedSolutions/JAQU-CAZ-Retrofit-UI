@@ -24,7 +24,9 @@ module Cognito
       return client.send(method, *args, &block) if respond_to_missing?(method)
 
       super
-    rescue Aws::CognitoIdentityProvider::Errors::ResourceNotFoundException
+    rescue Aws::CognitoIdentityProvider::Errors::ResourceNotFoundException,
+           Aws::CognitoIdentityProvider::Errors::UnrecognizedClientException => e
+      Rails.logger.info "Rescue From: #{e.class.name} - rotate credentials"
       # reload credentials
       @client = Aws::CognitoIdentityProvider::Client.new(credentials: credentials)
       # retry
