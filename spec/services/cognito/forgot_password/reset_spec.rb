@@ -10,6 +10,7 @@ RSpec.describe Cognito::ForgotPassword::Reset do
   let(:form) { OpenStruct.new(valid?: true) }
 
   before do
+    allow(ResetPasswordForm).to receive(:new).with(username).and_return(form)
     allow(Cognito::Client.instance).to receive(:forgot_password).with(
       client_id: anything,
       username: username
@@ -96,7 +97,7 @@ RSpec.describe Cognito::ForgotPassword::Reset do
 
       context 'when service raises `UserNotFoundException` exception' do
         before do
-          allow(COGNITO_CLIENT).to receive(:forgot_password).with(
+          allow(Cognito::Client.instance).to receive(:forgot_password).with(
             client_id: anything,
             username: username
           ).and_raise(
