@@ -313,7 +313,7 @@ steps:
         path: /var/run/docker.sock
 
   # Push built image to ECR registry
-  - name: publish st image to ecr
+  - name: publish image to ecr
     image: plugins/ecr
     settings:
       access_key:
@@ -577,7 +577,7 @@ steps:
         path: /var/run/docker.sock
 
   # Push built image to ECR registry
-  - name: publish st image to ecr
+  - name: publish image to ecr
     image: plugins/ecr
     settings:
       access_key:
