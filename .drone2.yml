@@ -403,7 +403,7 @@ steps:
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
       - tf init
-      - tf workspace  select st || tf workspace new st
+      - tf workspace select st || tf workspace new st
       - tf apply -auto-approve
     environment:
       TF_VAR_access_key:
@@ -668,7 +668,7 @@ steps:
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
       - tf init
-      - tf workspace  select sit || tf workspace new sit
+      - tf workspace select sit || tf workspace new sit
       - tf apply -auto-approve
     environment:
       TF_VAR_access_key:
@@ -720,7 +720,7 @@ steps:
       APPLICATION_NAME: retrofit-codedeploy-service-sit
       DEPLOYMENT_GROUP: retrofit-codedeploy-service-sit
       PROJECT: retrofit
-      DEPLOY_ENVIRONMENT: st
+      DEPLOY_ENVIRONMENT: sit
       LAMBDA_BUCKET: jaqu-shared-project-lambda-bucket
     when:
       event:
