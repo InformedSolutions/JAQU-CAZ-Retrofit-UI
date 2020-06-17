@@ -3,7 +3,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.6.5'
+ruby '2.6.6'
 
 gem 'rails', '~> 6.0.3.1'
 
@@ -22,6 +22,7 @@ gem 'webpacker'
 gem 'aws-sdk-cognitoidentityprovider'
 gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'
+gem 'aws-sdk-secretsmanager'
 
 group :development, :test do
   gem 'byebug'

@@ -38,6 +38,8 @@ steps:
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
+    build_args:
+      - AWS_REGION=eu-west-2
 
   # Trigger unit tests
   - name: unit tests
