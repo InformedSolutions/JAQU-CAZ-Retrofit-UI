@@ -887,7 +887,7 @@ steps:
         from_secret: jaqu_staging_aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
         from_secret: jaqu_staging_aws_secret_access_key
-      AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-stagingServiceRole
+      AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
       AWS_DEFAULT_REGION: eu-west-2
       APPLICATION_NAME: retrofit-codedeploy-service-preprod
       DEPLOYMENT_GROUP: retrofit-codedeploy-service-preprod
