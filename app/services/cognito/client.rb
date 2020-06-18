@@ -14,7 +14,7 @@ module Cognito
     # Initializer method for the service.
     #
     def initialize
-      @client = Aws::CognitoIdentityProvider::Client.new(credentials: credentials)
+      @client = load_client
     end
 
     ##
@@ -27,8 +27,8 @@ module Cognito
     rescue Aws::CognitoIdentityProvider::Errors::ResourceNotFoundException,
            Aws::CognitoIdentityProvider::Errors::UnrecognizedClientException => e
       Rails.logger.info "Rescue From: #{e.class.name} - rotate credentials"
-      # reload credentials
-      @client = Aws::CognitoIdentityProvider::Client.new(credentials: credentials)
+      # reload Cognito Client
+      @client = load_client
       # retry
       client.send(method, *args, &block)
     end
@@ -41,32 +41,22 @@ module Cognito
 
     private
 
-    # Loads Cognito Client Credentials.
-    def credentials
-      if secret_manager_credentials_provided?
-        secret_manager_credentials
-      else
-        key_credentials
-      end
+    # Loads AWS Cognito Client
+    def load_client
+      return Aws::CognitoIdentityProvider::Client.new unless cognito_sdk_secret
+
+      Aws::CognitoIdentityProvider::Client.new(credentials: secret_manager_credentials)
     end
 
     # Check if COGNITO_SDK_SECRET is set
-    def secret_manager_credentials_provided?
+    def cognito_sdk_secret
       ENV['COGNITO_SDK_SECRET']
-    end
-
-    # Loads Credentails from the ENV variables.
-    def key_credentials
-      Aws::Credentials.new(
-        ENV.fetch('AWS_ACCESS_KEY_ID', 'AWS_ACCESS_KEY_ID'),
-        ENV.fetch('AWS_SECRET_ACCESS_KEY', 'AWS_SECRET_ACCESS_KEY')
-      )
     end
 
     # Loads Credentials from SecretManager
     def secret_manager_credentials
       sm_credentials = JSON.parse(
-        secret_manager_client.get_secret_value(secret_id: ENV['COGNITO_SDK_SECRET']).secret_string
+        secret_manager_client.get_secret_value(secret_id: cognito_sdk_secret).secret_string
       )
       Aws::Credentials.new(
         sm_credentials['awsAccessKeyId'],
