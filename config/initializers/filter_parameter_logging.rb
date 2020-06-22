@@ -4,10 +4,14 @@
 
 # Configure sensitive parameters which will be filtered from the log file.
 Rails.application.config.filter_parameters += %i[
-  password
-  confirmation_code
   email
   username
+  aws_status
+  aws_session
   sub
+  hashed_password
   login_ip
+  password
+  confirmation_code
+  authenticity_token
 ]
