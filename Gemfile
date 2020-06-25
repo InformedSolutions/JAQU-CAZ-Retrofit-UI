@@ -8,16 +8,21 @@ ruby '2.6.6'
 gem 'rails', '~> 6.0.3.2'
 
 gem 'activerecord-nulldb-adapter'
-gem 'aws-sdk-cognitoidentityprovider'
-gem 'aws-sdk-rails'
-gem 'aws-sdk-s3'
 gem 'bootsnap', require: false
+gem 'brakeman'
+gem 'bundler-audit'
 gem 'devise'
 gem 'haml'
 gem 'httparty'
 gem 'puma'
+gem 'rubocop-rails'
 gem 'sdoc', require: false
 gem 'webpacker'
+
+gem 'aws-sdk-cognitoidentityprovider'
+gem 'aws-sdk-rails'
+gem 'aws-sdk-s3'
+gem 'aws-sdk-secretsmanager'
 
 group :development, :test do
   gem 'byebug'
@@ -26,6 +31,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'rspec-rails'
+  gem 'scss_lint-govuk', require: false
 end
 
 group :development do
@@ -38,13 +44,9 @@ group :development do
 end
 
 group :test do
-  gem 'brakeman'
-  gem 'bundler-audit'
   gem 'capybara'
   gem 'cucumber-rails', require: false
   gem 'rails-controller-testing'
-  gem 'rubocop-rails'
-  gem 'scss_lint-govuk', require: false
   gem 'selenium-webdriver'
   gem 'show_me_the_cookies'
   gem 'simplecov', '~> 0.17.1', require: false
