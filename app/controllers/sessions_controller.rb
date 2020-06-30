@@ -32,7 +32,7 @@ class SessionsController < Devise::SessionsController
   #
   # Returns a boolean.
   def credentials_valid?
-    both_fields_filled? && email_format_valid?
+    params[:user] && both_fields_filled? && email_format_valid?
   end
 
   ##
