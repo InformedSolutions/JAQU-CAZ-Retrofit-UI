@@ -16,10 +16,10 @@ class SessionsController < Devise::SessionsController
   # * +password+ - string, password submitted by the user
   #
   def create
-    if credentials_valid?
-      super
-    else
+    if credentials_invalid?
       redirect_to new_user_session_path
+    else
+      super
     end
   end
 
@@ -31,37 +31,39 @@ class SessionsController < Devise::SessionsController
   # 2. Check if email is in correct format.
   #
   # Returns a boolean.
-  def credentials_valid?
-    params[:user] && both_fields_filled? && email_format_valid?
+  def credentials_invalid?
+    both_fields_unfilled? || email_format_invalid?
   end
 
   ##
   # Checks if both email and password are filled
   #
   # Returns a boolean.
-  def both_fields_filled?
-    return true if !params[:user][:username].empty? && !params[:user][:username].empty?
+  def both_fields_unfilled?
+    return if user_params['username'].present? && user_params['password'].present?
 
-    flash['errors'] = {
+    flash[:errors] = {
       email: I18n.t('email.errors.required'),
       password: I18n.t('password.errors.required')
     }
-
-    false
   end
 
   ##
   # Checks if email is in correct format
   #
   # Returns a boolean.
-  def email_format_valid?
-    return true if Devise.email_regexp =~ params[:user][:username]
+  def email_format_invalid?
+    error_message = EmailValidator.call(email: user_params['username'])
+    return if error_message.nil?
 
-    flash['errors'] = {
-      email: I18n.t('email.errors.invalid_format'),
+    flash[:errors] = {
+      email: error_message,
       password: I18n.t('password.errors.required')
     }
+  end
 
-    false
+  # Returns the list of permitted params
+  def user_params
+    params.require(:user).permit(:username, :password)
   end
 end

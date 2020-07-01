@@ -1,9 +1,10 @@
-- @errors = flash['errors'] || (alert && {'email' => alert})
+- @errors = flash[:errors] || (alert && { email: alert })
 
 %main.govuk-main-wrapper#main-content{role: 'main'}
   %fieldset.govuk-fieldset
     %legend.govuk-fieldset__legend.govuk-fieldset__legend--xl
       %h1.govuk-heading-l Sign In
+
       - if @errors
         .govuk-error-summary{'aria-labelledby': 'error-summary-title',
                      'data-module': 'govuk-error-summary',
@@ -13,7 +14,7 @@
             There was a problem
           .govuk-error-summary__body
             %ul.govuk-list.govuk-error-summary__list
-              - @errors.each do |key, value|
+              - @errors.values.each do |value|
                 %li
                   = link_to(value, '#govuk-error-message', id: 'error-message')
 
@@ -27,22 +28,23 @@
           %span#govuk-error-message.govuk-error-message
             - if @errors
               %span.govuk-visually-hidden Error:
-              = @errors['email']
+              = @errors[:email]
           = f.email_field :username,
-            autofocus: true,
-            autocomplete: 'username',
-            maxlength: 45,
-            spellcheck: false,
-            class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if @errors}"
+                          autofocus: true,
+                          autocomplete: 'username',
+                          maxlength: 45,
+                          spellcheck: false,
+                          class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if @errors}"
 
         .govuk-form-group{class: ('govuk-form-group--error' if @errors)}
           = f.label :password, class: 'govuk-label'
           %span.govuk-error-message
             - if @errors
               %span.govuk-visually-hidden Error:
-              = @errors['password'] || @errors['email']
-          = f.password_field :password, autocomplete: 'current-password',
-            class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if @errors}"
+              = @errors[:password] || @errors[:email]
+          = f.password_field :password,
+                              autocomplete: 'current-password',
+                              class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if @errors}"
 
         .govuk-form-group
           = f.submit 'Continue', class: 'govuk-button', 'data-module': 'govuk-button'
