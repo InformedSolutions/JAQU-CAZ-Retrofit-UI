@@ -1481,20 +1481,6 @@ get:
 
 ---
 kind: secret
-name: jaqu_prod_service_aws_access_key_id
-get:
-  path: /build-tools/drone
-  name: awsProdServiceAccessKeyId
-
----
-kind: secret
-name: jaqu_prod_service_aws_secret_access_key
-get:
-  path: /build-tools/drone
-  name: awsProdServiceSecretAccessKey
-
----
-kind: secret
 name: jaqu_master_aws_access_key_id
 get:
   path: /build-tools/drone
