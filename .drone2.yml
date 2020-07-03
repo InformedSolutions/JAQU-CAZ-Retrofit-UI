@@ -1129,7 +1129,7 @@ steps:
       event:
         - push
 
-  - name: codedeploy ui st
+  - name: codedeploy ui uat
     image: alpine:3.11.6
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
