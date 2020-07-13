@@ -39,11 +39,11 @@
       %p
         We're always looking to improve the accessibility of this website. If you find any problems
         that are not listed on this page or think we're not meeting accessibility requirements,
-        let us know using our
+        let us know by emailing us at:
         = succeed '.' do
-          = external_link_to('feedback form',
-                             'https://vehiclecheck.cleanairzone.defra.gov.uk/contact_forms',
-                             id: 'feedback-form-link')
+          = mail_to('CAZ.Database.Support@informed.com',
+                           'CAZ.Database.Support@informed.com',
+                           id: 'mail_to_address')
 
       %h2.govuk-heading-m Enforcement procedure
       %p
