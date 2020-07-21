@@ -859,7 +859,7 @@ steps:
   - name: await ecs rollout
     image: alpine:3.11.6
     environment:
-      build_id_url: https://sit2-retrofit.datauploadportal.co.uk/build_id
+      build_id_url: https://sit-retrofit.datauploadportal.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
@@ -904,7 +904,7 @@ steps:
         from_secret: browserstack_username
       BS_AUTHKEY:
         from_secret: browserstack_auth_key
-      BASEURL_RETRO: 'https://sit2-retrofit.datauploadportal.co.uk'
+      BASEURL_RETRO: 'https://sit-retrofit.datauploadportal.co.uk'
       VALID_USERNAME: 'tester@informed.com'
       VALID_PASSWORD: 'Tester123..'
       BROWSER_SET: 'min'
@@ -1081,7 +1081,7 @@ steps:
   - name: await ecs rollout
     image: alpine:3.11.6
     environment:
-      build_id_url: https://preprod2-retrofit.datauploadportal.co.uk/build_id
+      build_id_url: https://preprod-retrofit.datauploadportal.co.uk/build_id
       SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
       AWS_ACCESS_KEY_ID:
         from_secret: jaqu_controlled_aws_access_key_id
@@ -1343,7 +1343,7 @@ steps:
   - name: await ecs rollout
     image: alpine:3.11.6
     environment:
-      build_id_url: https://uat2-retrofit.datauploadportal.co.uk/build_id
+      build_id_url: https://uat-retrofit.datauploadportal.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
@@ -1387,7 +1387,7 @@ steps:
         from_secret: browserstack_username
       BS_AUTHKEY:
         from_secret: browserstack_auth_key
-      BASEURL_RETRO: 'https://uat2-retrofit.datauploadportal.co.uk'
+      BASEURL_RETRO: 'https://uat-retrofit.datauploadportal.co.uk'
       VALID_USERNAME: 'tester@informed.com'
       VALID_PASSWORD: 'Tester123..'
       BROWSER_SET: 'min'
