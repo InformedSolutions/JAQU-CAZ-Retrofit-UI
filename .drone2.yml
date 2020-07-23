@@ -1440,7 +1440,7 @@ steps:
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout live_prod
+      - git checkout prod_live
       - cd terraform-iac/projects/retrofit/layers/02.web
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
@@ -1496,7 +1496,7 @@ steps:
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout live_prod
+      - git checkout prod_live
       - cd terraform-iac/projects/retrofit/layers/02.web
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
