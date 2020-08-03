@@ -13,7 +13,7 @@ RSpec.describe Cognito::AuthUser do
 
   context 'with successful call' do
     before do
-      allow(COGNITO_CLIENT).to receive(:initiate_auth).with(
+      allow(Cognito::Client.instance).to receive(:initiate_auth).with(
         client_id: anything,
         auth_flow: 'USER_PASSWORD_AUTH',
         auth_parameters: { 'USERNAME' => username, 'PASSWORD' => password }
@@ -82,7 +82,7 @@ RSpec.describe Cognito::AuthUser do
 
   context 'when call raises exception' do
     before do
-      allow(COGNITO_CLIENT)
+      allow(Cognito::Client.instance)
         .to receive(:initiate_auth)
         .and_raise(
           Aws::CognitoIdentityProvider::Errors::NotAuthorizedException.new('', 'error')
