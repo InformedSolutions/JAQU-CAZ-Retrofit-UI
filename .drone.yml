@@ -172,7 +172,7 @@ steps:
     pull: never
     commands:
        - bundle exec bundle audit check --update
-       - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+       - yarn run improved-yarn-audit --retry-on-network-failure
        - bundle exec brakeman
     volumes:
       - name: docker_sock
@@ -441,7 +441,7 @@ steps:
     pull: never
     commands:
       - bundle audit check --update
-      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+      - yarn run improved-yarn-audit --retry-on-network-failure
       - brakeman
     volumes:
       - name: docker_sock
@@ -766,7 +766,7 @@ steps:
     pull: never
     commands:
       - bundle audit check --update
-      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+      - yarn run improved-yarn-audit --retry-on-network-failure
       - brakeman
     volumes:
       - name: docker_sock

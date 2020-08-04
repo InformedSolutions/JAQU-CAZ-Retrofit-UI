@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 # :nocov:
-
 # allow to use nulldb adapter
 module ActiveRecord
   module ConnectionAdapters
