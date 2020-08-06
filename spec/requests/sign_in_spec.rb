@@ -15,12 +15,12 @@ describe 'User singing in', type: :request do
   end
 
   describe 'signing in' do
-    subject(:http_request) { post user_session_path(params) }
+    subject { post user_session_path(params) }
 
     context 'when incorrect credentials given' do
       before do
         allow(Cognito::AuthUser).to receive(:call).and_return(false)
-        http_request
+        subject
       end
 
       it 'shows `The username or password you entered is incorrect` message' do
@@ -34,12 +34,12 @@ describe 'User singing in', type: :request do
       end
 
       it 'logs user in' do
-        http_request
+        subject
         expect(controller.current_user).not_to be(nil)
       end
 
       it 'redirects to root' do
-        http_request
+        subject
         expect(response).to redirect_to(root_path)
       end
 
@@ -47,7 +47,7 @@ describe 'User singing in', type: :request do
         expect(Cognito::AuthUser)
           .to receive(:call)
           .with(username: email, password: password, login_ip: @remote_ip)
-        http_request
+        subject
       end
     end
   end
