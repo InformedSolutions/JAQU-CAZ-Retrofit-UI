@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe 'PasswordsController - POST #change', type: :request do
-  subject(:http_request) { post change_passwords_path, params: params }
+  subject { post change_passwords_path, params: params }
 
   let(:params) do
     {
@@ -38,17 +38,17 @@ describe 'PasswordsController - POST #change', type: :request do
     end
 
     it 'returns redirect to success page' do
-      http_request
+      subject
       expect(response).to redirect_to(success_passwords_path)
     end
 
     it 'clears password_reset_token' do
-      http_request
+      subject
       expect(session[:password_reset_token]).to be_nil
     end
 
     it 'clears password_reset_username' do
-      http_request
+      subject
       expect(session[:password_reset_username]).to be_nil
     end
 
@@ -60,7 +60,7 @@ describe 'PasswordsController - POST #change', type: :request do
       end
 
       it 'returns redirect to confirm_reset_passwords_path' do
-        http_request
+        subject
         expect(response).to redirect_to(confirm_reset_passwords_path)
       end
     end
@@ -73,7 +73,7 @@ describe 'PasswordsController - POST #change', type: :request do
       end
 
       it 'returns redirect to confirm_reset_passwords_path' do
-        http_request
+        subject
         expect(response).to redirect_to(confirm_reset_passwords_path)
       end
     end
@@ -81,7 +81,7 @@ describe 'PasswordsController - POST #change', type: :request do
 
   context 'without password_reset_token set' do
     it 'returns redirect to success page' do
-      http_request
+      subject
       expect(response).to redirect_to(success_passwords_path)
     end
   end

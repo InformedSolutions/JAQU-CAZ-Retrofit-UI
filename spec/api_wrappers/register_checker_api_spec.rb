@@ -6,7 +6,7 @@ RSpec.describe RegisterCheckerApi do
   let(:correlation_id) { SecureRandom.uuid }
 
   describe '.register_job' do
-    subject(:api_call) { described_class.register_job(filename, correlation_id) }
+    subject { described_class.register_job(filename, correlation_id) }
 
     let(:filename) { 'random_file' }
     let(:job_name) { 'name' }
@@ -23,7 +23,7 @@ RSpec.describe RegisterCheckerApi do
     end
 
     it 'returns job name' do
-      expect(api_call).to eq(job_name)
+      expect(subject).to eq(job_name)
     end
   end
 
@@ -40,19 +40,19 @@ RSpec.describe RegisterCheckerApi do
     end
 
     describe '.job_status' do
-      subject(:api_call) { described_class.job_status(job_name, correlation_id) }
+      subject { described_class.job_status(job_name, correlation_id) }
 
       it 'returns job status' do
-        expect(api_call).to eq(job_status)
+        expect(subject).to eq(job_status)
       end
     end
 
     describe '.job_errors' do
-      subject(:api_call) { described_class.job_errors(job_name, correlation_id) }
+      subject { described_class.job_errors(job_name, correlation_id) }
 
       context 'when status is not FAILURE' do
         it 'returns nil' do
-          expect(api_call).to be_nil
+          expect(subject).to be_nil
         end
       end
 
@@ -61,7 +61,7 @@ RSpec.describe RegisterCheckerApi do
         let(:job_errors) { %w[test test] }
 
         it 'returns errors' do
-          expect(api_call).to eq(job_errors)
+          expect(subject).to eq(job_errors)
         end
       end
     end
