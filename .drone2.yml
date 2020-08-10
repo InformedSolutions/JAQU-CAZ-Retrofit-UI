@@ -1366,7 +1366,7 @@ steps:
         from_secret: retrofit_ruby_secret
       TF_VAR_google_analytics_id: UA-150934733-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.com/r/NXXPW3G
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_0IWY7iNzTGGtL6d
     when:
       event:
         - pull_request
@@ -1422,7 +1422,7 @@ steps:
         from_secret: retrofit_ruby_secret
       TF_VAR_google_analytics_id: UA-150934733-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.com/r/NXXPW3G
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_0IWY7iNzTGGtL6d
     when:
       event:
         - push
