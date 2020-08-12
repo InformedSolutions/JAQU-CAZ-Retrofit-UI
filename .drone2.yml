@@ -169,7 +169,7 @@ steps:
     pull: never
     commands:
       - bundle audit check --update
-      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+      - yarn run improved-yarn-audit --exclude '1548' --retry-on-network-failure
       - brakeman
     volumes:
       - name: docker_sock
@@ -395,7 +395,7 @@ steps:
     pull: never
     commands:
       - bundle audit check --update
-      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+      - yarn run improved-yarn-audit --exclude '1548' --retry-on-network-failure
       - brakeman
     volumes:
       - name: docker_sock
@@ -553,7 +553,7 @@ steps:
   - name: await ecs rollout
     image: alpine:3.11.6
     environment:
-      build_id_url: https://st2-retrofit.datauploadportal.co.uk/build_id
+      build_id_url: https://st-retrofit.datauploadportal.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
@@ -597,7 +597,7 @@ steps:
         from_secret: browserstack_username
       BS_AUTHKEY:
         from_secret: browserstack_auth_key
-      BASEURL_RETRO: 'https://st2-retrofit.datauploadportal.co.uk'
+      BASEURL_RETRO: 'https://st-retrofit.datauploadportal.co.uk'
       VALID_USERNAME: 'tester@informed.com'
       VALID_PASSWORD: 'Tester123..'
       BROWSER_SET: 'min'
@@ -691,18 +691,6 @@ steps:
     commands:
       - bundle exec rubocop
       - bundle exec scss-lint app/javascript
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
-
-  # Invoke security analysis through Ruby libraries
-  - name: security tests (Ruby)
-    image: test-retrofit-frontend
-    pull: never
-    commands:
-      - bundle audit check --update
-      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
-      - brakeman
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -859,7 +847,7 @@ steps:
   - name: await ecs rollout
     image: alpine:3.11.6
     environment:
-      build_id_url: https://sit2-retrofit.datauploadportal.co.uk/build_id
+      build_id_url: https://sit-retrofit.datauploadportal.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
@@ -867,54 +855,6 @@ steps:
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
-    when:
-      event:
-        - push
-
-
-    # Build end to end tests docker image
-  - name: build end to end test image
-    image: docker:19.03.11-git
-    commands:
-      - mkdir ~/.ssh
-      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
-      - chmod 600 ~/.ssh/id_rsa
-      - touch ~/.ssh/known_hosts
-      - chmod 600 ~/.ssh/known_hosts
-      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
-      - git clone git@github.com:InformedSolutions/JAQU-CAZ-QA-selenium.git
-      - cd JAQU-CAZ-QA-selenium
-      - docker build -t selenium-jaqu .
-    environment:
-      GIT_PRIVATE_SSH:
-        from_secret: github_private_key
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
-    when:
-      event:
-        - push
-
-    # Run end to end tests
-  - name: run end to end tests
-    image: selenium-jaqu
-    pull: never
-    environment:
-      BS_USERNAME:
-        from_secret: browserstack_username
-      BS_AUTHKEY:
-        from_secret: browserstack_auth_key
-      BASEURL_RETRO: 'https://sit2-retrofit.datauploadportal.co.uk'
-      VALID_USERNAME: 'tester@informed.com'
-      VALID_PASSWORD: 'Tester123..'
-      BROWSER_SET: 'min'
-      VCCS_USER: 'vccsservice'
-      VCCS_PASSWORD: 'Password001!'
-      BUILD: RETRO-UI-${DRONE_BUILD_NUMBER}
-      LOCATION: browserstack
-    commands:
-      - cd JAQU-CAZ-QA-selenium
-      - cucumber -t @RETRO --guess --retry 3
     when:
       event:
         - push
@@ -1081,7 +1021,7 @@ steps:
   - name: await ecs rollout
     image: alpine:3.11.6
     environment:
-      build_id_url: https://preprod2-retrofit.datauploadportal.co.uk/build_id
+      build_id_url: https://preprod-retrofit.datauploadportal.co.uk/build_id
       SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
       AWS_ACCESS_KEY_ID:
         from_secret: jaqu_controlled_aws_access_key_id
@@ -1185,7 +1125,7 @@ steps:
     pull: never
     commands:
       - bundle audit check --update
-      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+      - yarn run improved-yarn-audit --exclude '1548' --retry-on-network-failure
       - brakeman
     volumes:
       - name: docker_sock
@@ -1343,7 +1283,7 @@ steps:
   - name: await ecs rollout
     image: alpine:3.11.6
     environment:
-      build_id_url: https://uat2-retrofit.datauploadportal.co.uk/build_id
+      build_id_url: https://uat-retrofit.datauploadportal.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
@@ -1351,53 +1291,6 @@ steps:
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
-    when:
-      event:
-        - push
-
-    # Build end to end tests docker image
-  - name: build end to end test image
-    image: docker:19.03.11-git
-    commands:
-      - mkdir ~/.ssh
-      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
-      - chmod 600 ~/.ssh/id_rsa
-      - touch ~/.ssh/known_hosts
-      - chmod 600 ~/.ssh/known_hosts
-      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
-      - git clone git@github.com:InformedSolutions/JAQU-CAZ-QA-selenium.git
-      - cd JAQU-CAZ-QA-selenium
-      - docker build -t selenium-jaqu .
-    environment:
-      GIT_PRIVATE_SSH:
-        from_secret: github_private_key
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
-    when:
-      event:
-        - push
-
-    # Run end to end tests
-  - name: run end to end tests
-    image: selenium-jaqu
-    pull: never
-    environment:
-      BS_USERNAME:
-        from_secret: browserstack_username
-      BS_AUTHKEY:
-        from_secret: browserstack_auth_key
-      BASEURL_RETRO: 'https://uat2-retrofit.datauploadportal.co.uk'
-      VALID_USERNAME: 'tester@informed.com'
-      VALID_PASSWORD: 'Tester123..'
-      BROWSER_SET: 'min'
-      VCCS_USER: 'vccsservice'
-      VCCS_PASSWORD: 'Password001!'
-      BUILD: RETRO-UI-${DRONE_BUILD_NUMBER}
-      LOCATION: browserstack
-    commands:
-      - cd JAQU-CAZ-QA-selenium
-      - cucumber -t @RETRO --guess --retry 3
     when:
       event:
         - push
@@ -1440,7 +1333,7 @@ steps:
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout live_prod
+      - git checkout prod_live
       - cd terraform-iac/projects/retrofit/layers/02.web
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
@@ -1473,7 +1366,7 @@ steps:
         from_secret: retrofit_ruby_secret
       TF_VAR_google_analytics_id: UA-150934733-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.com/r/NXXPW3G
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_0IWY7iNzTGGtL6d
     when:
       event:
         - pull_request
@@ -1496,7 +1389,7 @@ steps:
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout live_prod
+      - git checkout prod_live
       - cd terraform-iac/projects/retrofit/layers/02.web
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
@@ -1529,7 +1422,7 @@ steps:
         from_secret: retrofit_ruby_secret
       TF_VAR_google_analytics_id: UA-150934733-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.com/r/NXXPW3G
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_0IWY7iNzTGGtL6d
     when:
       event:
         - push
@@ -1563,7 +1456,7 @@ steps:
   - name: await ecs rollout
     image: alpine:3.11.6
     environment:
-      build_id_url: https://prod2-retrofit.datauploadportal.co.uk/build_id
+      build_id_url: https://retrofit.drive-clean-air-zone.service.gov.uk/build_id
       SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
       AWS_ACCESS_KEY_ID:
         from_secret: jaqu_staging_aws_access_key_id
