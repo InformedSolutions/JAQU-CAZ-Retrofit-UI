@@ -31,3 +31,9 @@ Feature: Password reset
       And I should see "Update your password"
     Then I enter only confirmation code
       And I should see "Enter your password"
+
+  Scenario: Filling invalid passwords
+    Given I am on the 'Reset link sent' page
+    When I enter passwords that does not comply with Cognito setup password policy
+      And I press 'Update password' button
+      And I should see 'Password must be at least 12 characters long, include at least one upper case letter, a number, and a special character' 3 times
