@@ -56,7 +56,7 @@ describe 'PasswordsController - POST #change', type: :request do
     end
 
     it 'updates user lockout data' do
-      http_request
+      subject
       expect(Cognito::Lockout::UpdateUser).to have_received(:call)
         .with(username: username, failed_logins: 0)
     end
@@ -74,7 +74,7 @@ describe 'PasswordsController - POST #change', type: :request do
       end
 
       it 'does not update user lockout data' do
-        http_request
+        subject
         expect(Cognito::Lockout::UpdateUser).not_to have_received(:call)
       end
     end
@@ -92,7 +92,7 @@ describe 'PasswordsController - POST #change', type: :request do
       end
 
       it 'does not update user lockout data' do
-        http_request
+        subject
         expect(Cognito::Lockout::UpdateUser).not_to have_received(:call)
       end
     end

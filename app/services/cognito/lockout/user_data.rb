@@ -52,7 +52,7 @@ module Cognito
 
       # Perform the call to Cognito service to get user attributes
       def user_data
-        @user_data ||= COGNITO_CLIENT.admin_get_user(
+        @user_data ||= client.admin_get_user(
           {
             user_pool_id: user_pool_id,
             username: username

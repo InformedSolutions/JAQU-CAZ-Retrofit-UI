@@ -19,7 +19,7 @@ RSpec.describe Cognito::Lockout::UserData do
   let(:lockout_time) { nil }
 
   before do
-    allow(COGNITO_CLIENT).to receive(:admin_get_user).with(
+    allow(Cognito::Client.instance).to receive(:admin_get_user).with(
       user_pool_id: anything,
       username: username
     ).and_return(user_response)

@@ -22,7 +22,7 @@ RSpec.describe Cognito::Lockout::VerifyInvalidLogins do
   let(:lockout_timeout) { ENV.fetch('LOCKOUT_TIMEOUT', 30).to_i }
 
   before do
-    allow(COGNITO_CLIENT).to receive(:admin_get_user).with(
+    allow(Cognito::Client.instance).to receive(:admin_get_user).with(
       user_pool_id: anything,
       username: username
     ).and_return(user_response)

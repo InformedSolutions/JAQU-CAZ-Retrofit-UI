@@ -3,7 +3,7 @@
 ##
 # Controller class for the password change.
 #
-class PasswordsController < ApplicationController # rubocop:disable Metrics/ClassLength
+class PasswordsController < ApplicationController
   # checks if a user is logged in
   before_action :authenticate_user!, only: %i[new create]
   # checks if a user has a 'FORCE_NEW_PASSWORD' status
