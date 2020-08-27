@@ -3,7 +3,7 @@
 ##
 # Module used to wrap communication with Amazon Cognito
 #
-# Configuration of the client is done in config/initializers/cognito_client.rb and by ENV variables
+# Configuration of the client is done in services/cognito/client.rb and by ENV variables
 #
 module Cognito
   ##
@@ -58,7 +58,7 @@ module Cognito
     # Performs the call to Cognito. Returns Cognito response.
     def auth_user
       log_action "Authenticating user: #{username}"
-      auth_response = COGNITO_CLIENT.initiate_auth(
+      auth_response = client.initiate_auth(
         client_id: ENV['AWS_COGNITO_CLIENT_ID'],
         auth_flow: 'USER_PASSWORD_AUTH',
         auth_parameters: { 'USERNAME' => username, 'PASSWORD' => password }
