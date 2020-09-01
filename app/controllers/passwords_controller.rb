@@ -119,6 +119,7 @@ class PasswordsController < ApplicationController
   def change
     update_password_call
     Cognito::ForgotPassword::UpdateUser.call(reset_counter: 1, username: username)
+    reset_user_lockout_data
     redirect_to success_passwords_path
   rescue Cognito::CallException => e
     redirect_to confirm_reset_passwords_path, alert: e.message
@@ -206,5 +207,10 @@ class PasswordsController < ApplicationController
   # username in session
   def username_in_session
     session[:password_reset_username]
+  end
+
+  # Updates user data associated with account lockout.
+  def reset_user_lockout_data
+    Cognito::Lockout::UpdateUser.call(username: username, failed_logins: 0)
   end
 end
