@@ -1,3 +1,4 @@
+require: rubocop-rails
 inherit_from: ./lib/rubocop/blacklist.yml
 
 AllCops:
@@ -71,4 +72,7 @@ Style/RedundantRegexpCharacterClass:
   Enabled: true
 
 Style/RedundantRegexpEscape:
+  Enabled: true
+
+Style/RedundantFetchBlock:
   Enabled: true
