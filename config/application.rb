@@ -20,10 +20,10 @@ module CsvUploader
     # timeout the user session without activity.
     config.x.session_timeout_in_min = ENV.fetch('SESSION_TIMEOUT', 15).to_i
     # link to feedback page.
-    config.x.feedback_url = ENV.fetch('FEEDBACK_URL', 'https://www.surveymonkey.com/r/NXXPW3G')
+    config.x.feedback_url = ENV.fetch('FEEDBACK_URL', 'https://defragroup.eu.qualtrics.com/jfe/form/SV_7PZ3p21Nt1t5A0t')
     # name of service
     config.x.service_name = 'Retrofitted Vehicles Upload Portal'
-    default_email = 'Useraccount.Query@defra.gov.uk'
+    default_email = 'CAZ.DataUpload.Support@informed.com'
     config.x.contact_email = default_email
     config.x.service_email = ENV.fetch('SES_FROM_EMAIL', default_email)
 

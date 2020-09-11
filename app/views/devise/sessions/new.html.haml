@@ -1,8 +1,11 @@
+- @errors = flash[:errors] || (alert && { 'email' => alert })
+
 %main.govuk-main-wrapper#main-content{role: 'main'}
   %fieldset.govuk-fieldset
     %legend.govuk-fieldset__legend.govuk-fieldset__legend--xl
       %h1.govuk-heading-l Sign In
-      - if alert
+
+      - if @errors
         .govuk-error-summary{'aria-labelledby': 'error-summary-title',
                      'data-module': 'govuk-error-summary',
                      role: 'alert',
@@ -11,35 +14,37 @@
             There was a problem
           .govuk-error-summary__body
             %ul.govuk-list.govuk-error-summary__list
-              %li
-                = link_to('The email or password you entered is incorrect', '#govuk-error-message', id: 'error-message')
+              - @errors.values.each do |value|
+                %li
+                  = link_to(value, '#govuk-error-message', id: 'error-message')
 
       %p
         For Account related queries, please email us at
         = mail_to Rails.configuration.x.contact_email
 
       = form_for(resource, as: resource_name, url: session_path(resource_name), html: {novalidate: 'novalidate'}) do |f|
-        .govuk-form-group{class: ('govuk-form-group--error' if alert)}
+        .govuk-form-group{class: ('govuk-form-group--error' if @errors)}
           = f.label :username, 'Email', class: 'govuk-label'
           %span#govuk-error-message.govuk-error-message
-            - if alert
+            - if @errors
               %span.govuk-visually-hidden Error:
-              = alert
+              = @errors['email']
           = f.email_field :username,
-            autofocus: true,
-            autocomplete: 'username',
-            maxlength: 45,
-            spellcheck: false,
-            class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if alert}"
+                          autofocus: true,
+                          autocomplete: 'username',
+                          maxlength: 45,
+                          spellcheck: false,
+                          class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if @errors}"
 
-        .govuk-form-group{class: ('govuk-form-group--error' if alert)}
+        .govuk-form-group{class: ('govuk-form-group--error' if @errors)}
           = f.label :password, class: 'govuk-label'
           %span.govuk-error-message
-            - if alert
+            - if @errors
               %span.govuk-visually-hidden Error:
-              Enter your password
-          = f.password_field :password, autocomplete: 'current-password',
-            class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if alert}"
+              = @errors['password'] || @errors['email']
+          = f.password_field :password,
+                              autocomplete: 'current-password',
+                              class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if @errors}"
 
         .govuk-form-group
           = f.submit 'Continue', class: 'govuk-button', 'data-module': 'govuk-button'
