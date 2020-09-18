@@ -29,7 +29,6 @@ module Cognito
       Rails.logger.info "Rescue From: #{e.class.name} - rotate credentials"
       # reload Cognito Client
       @client = load_client
-      byebug
       # retry
       client.send(method, *args, &block)
     end
