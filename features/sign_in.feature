@@ -11,14 +11,16 @@ Feature: Sign In
       And I should see "Retrofitted Vehicles Upload Portal" title
       And I should not see "Data rules" link
     Then I should enter valid credentials and press the Continue
-    When I should see "Retrofitted Vehicles Data Upload"
+    When I should see "Retrofitted Vehicles Upload Portal"
+      And I should see "Uploading your data"
       And Cookie is created for my session
 
   Scenario: View upload page with cookie that has not expired
     Given I have authentication cookie that has not expired
     When I navigate to a Upload page
     Then I am redirected to the Upload page
-      And I should see "Retrofitted Vehicles Data Upload"
+      And I should see "Retrofitted Vehicles Upload Portal"
+      And I should see "Uploading your data"
       And I should see "Upload" link
       And I should see "Data rules" link
 
