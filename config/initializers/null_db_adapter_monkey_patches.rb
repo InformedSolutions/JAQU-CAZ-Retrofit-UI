@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# :nocov:
 # allow to use nulldb adapter
 module ActiveRecord
   module ConnectionAdapters
@@ -47,4 +46,3 @@ end
 
 ActiveRecord::Tasks::DatabaseTasks.register_task(/nulldb/,
                                                  ActiveRecord::Tasks::NullDBDatabaseTasks)
-# :nocov:

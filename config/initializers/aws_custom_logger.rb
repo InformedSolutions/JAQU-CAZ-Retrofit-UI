@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# :nocov:
 module Aws
   module Plugins
     class Logging < Seahorse::Client::Plugin
@@ -20,4 +19,3 @@ module Aws
     end
   end
 end
-# :nocov:
