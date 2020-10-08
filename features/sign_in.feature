@@ -7,7 +7,7 @@ Feature: Sign In
     Given I have no authentication cookie
     When I navigate to a Upload page
     Then I am redirected to the unauthenticated root page
-      And I should see "Sign In"
+      And I should see "Sign in"
       And I should see "Retrofitted Vehicles Upload Portal" title
       And I should not see "Data rules" link
     Then I should enter valid credentials and press the Continue
@@ -28,7 +28,7 @@ Feature: Sign In
     Given I have authentication cookie that has expired
     When I navigate to a Upload page
     Then I am redirected to the unauthenticated root page
-      And I should see "Sign In"
+      And I should see "Sign in"
 
   Scenario: Sign in with invalid credentials
     Given I am on the Sign in page
@@ -42,7 +42,7 @@ Feature: Sign In
     Then I am redirected to the Sign in page
     When I navigate to a Upload page
     Then I am redirected to the unauthenticated root page
-      And I should see "Sign In"
+      And I should see "Sign in"
 
   Scenario: Sign in with invalid email format
     Given I am on the Sign in page
