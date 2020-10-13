@@ -21,12 +21,10 @@ gem 'sdoc', require: false
 gem 'webpacker'
 
 group :development, :test do
-  gem 'byebug'
   gem 'dotenv-rails'
   gem 'haml-rails'
-  gem 'pry-byebug'
-  gem 'pry-rails'
   gem 'rspec-rails'
+  gem 'ruby_jard'
 end
 
 group :development do
