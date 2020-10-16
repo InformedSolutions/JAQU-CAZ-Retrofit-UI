@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 # :nocov:
-
 # allow to use nulldb adapter
 module ActiveRecord
   module ConnectionAdapters
@@ -19,7 +18,7 @@ module ActiveRecord
         @configuration = configuration
       end
 
-      def create(_ = false)
+      def create(_: false)
         # NO-OP
       end
 

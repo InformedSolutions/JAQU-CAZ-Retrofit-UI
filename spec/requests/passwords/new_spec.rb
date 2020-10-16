@@ -3,11 +3,11 @@
 require 'rails_helper'
 
 describe 'PasswordsController - GET #new', type: :request do
-  subject(:http_request) { get new_password_path }
+  subject { get new_password_path }
 
   before do
     sign_in user
-    http_request
+    subject
   end
 
   context 'when user aws_status is OK' do

@@ -36,7 +36,7 @@ class CsvUploadService < BaseService
   #
   # Returns a boolean.
   def validate
-    if no_file_selected? || invalid_extname? || invalid_filename?
+    if no_file_selected? || invalid_extname? || invalid_filename? || filesize_too_big?
       raise CsvUploadFailureException, error
     end
   end
@@ -74,13 +74,21 @@ class CsvUploadService < BaseService
     end
   end
 
+  # Checks if file size not bigger than `Rails.configuration.x.csv_file_size_limit`
+  # Returns a boolean if filename is compliant with the naming rules
+  # Returns a string if not.
+  def filesize_too_big?
+    csv_file_size_limit = Rails.configuration.x.csv_file_size_limit
+    @error = "The CSV must be smaller than #{csv_file_size_limit}MB" if file.size > csv_file_size_limit.megabytes
+  end
+
   # Uploading file to AWS S3.
   #
   # Raise exception if upload failed
   #
   # Returns a boolean.
   def upload_to_s3
-    log_action "Uploading file to s3 by a user: #{user.username}"
+    log_action 'Uploading file to S3'
     return true if aws_call
 
     raise CsvUploadFailureException, I18n.t('csv.errors.base')

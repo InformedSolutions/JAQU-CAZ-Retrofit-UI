@@ -3,12 +3,12 @@
 require 'rails_helper'
 
 describe 'PasswordsController - GET #success', type: :request do
-  subject(:http_request) { get success_passwords_path }
+  subject { get success_passwords_path }
 
   context 'when user is logged in' do
     before do
       sign_in new_user
-      http_request
+      subject
     end
 
     it 'returns 200' do
@@ -17,7 +17,7 @@ describe 'PasswordsController - GET #success', type: :request do
   end
 
   context 'when user is not logged in' do
-    before { http_request }
+    before { subject }
 
     it 'returns 200' do
       expect(response).to be_successful
