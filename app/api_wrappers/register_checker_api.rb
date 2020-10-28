@@ -139,16 +139,5 @@ class RegisterCheckerApi < BaseApi
         'X-Correlation-ID' => correlation_id
       }
     end
-
-    ##
-    # Logs given message at +info+ level with a proper tag.
-    #
-    # ==== Attributes
-    #
-    # * +msg+ - string, log message
-    #
-    def log_call(msg)
-      Rails.logger.info "[RegisterCheckerApi] #{msg}"
-    end
   end
 end
