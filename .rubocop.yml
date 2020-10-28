@@ -19,14 +19,5 @@ Style/MixinUsage:
   Exclude:
     - 'features/step_definitions/*.rb'
 
-Style/Documentation:
-  Enabled: false
-
-Style/GuardClause:
-  Enabled: false
-
-Style/IfUnlessModifier:
-  Enabled: false
-
 Lint/MissingSuper:
    Enabled: false

@@ -3,12 +3,7 @@
 require 'rails_helper'
 
 describe UploadController, type: :request do
-  let(:file_path) do
-    File.join(
-      'spec',
-      'fixtures', 'files', 'csv', 'CAZ-2020-01-08.csv'
-    )
-  end
+  let(:file_path) { File.join('spec', 'fixtures', 'files', 'csv', 'CAZ-2020-01-08.csv') }
   let(:user) { new_user(email: 'test@example.com') }
 
   before { sign_in user }
@@ -24,13 +19,13 @@ describe UploadController, type: :request do
     context 'when user login IP does not match request IP' do
       let(:user) { new_user(login_ip: '0.0.0.0') }
 
+      before { subject }
+
       it 'returns a redirect to login page' do
-        subject
         expect(response).to redirect_to(new_user_session_path)
       end
 
       it 'logs out the user' do
-        subject
         expect(controller.current_user).to be_nil
       end
     end
@@ -57,14 +52,13 @@ describe UploadController, type: :request do
   end
 
   describe 'POST #import' do
-    subject do
-      post import_upload_index_path, params: { file: csv_file }
-    end
+    subject { post import_upload_index_path, params: { file: csv_file } }
 
     let(:csv_file) { fixture_file_upload(file_path) }
 
     context 'with valid params' do
       let(:job_name) { 'name' }
+
       before do
         allow(CsvUploadService).to receive(:call).and_return(true)
         allow(RegisterCheckerApi).to receive(:register_job).and_return(job_name)
@@ -189,24 +183,49 @@ describe UploadController, type: :request do
         }
       end
 
-      before do
-        inject_session(job: job_data)
-        allow(Ses::SendSuccessEmail).to receive(:call).and_return(true)
+      before { inject_session(job: job_data) }
+
+      context 'with successful call to Ses::SendSuccessEmail' do
+        before { allow(Ses::SendSuccessEmail).to receive(:call).and_return(true) }
+
+        it 'returns a 200 OK status' do
+          subject
+          expect(response).to have_http_status(:ok)
+        end
+
+        it 'calls Ses::SendSuccessEmail' do
+          expect(Ses::SendSuccessEmail).to receive(:call).with(user: user, job_data: job_data)
+          subject
+        end
+
+        it 'clears job data from the session' do
+          subject
+          expect(session[:job]).to be_nil
+        end
+
+        it 'does not render the warning' do
+          subject
+          expect(response.body).not_to include(I18n.t('upload.delivery_error'))
+        end
       end
 
-      it 'returns 200' do
-        subject
-        expect(response).to be_successful
-      end
+      context 'with unsuccessful call to Ses::SendSuccessEmail' do
+        before do
+          allow(Ses::SendSuccessEmail).to receive(:call).and_return(false)
+          subject
+        end
 
-      it 'calls Ses::SendSuccessEmail' do
-        expect(Ses::SendSuccessEmail).to receive(:call).with(user: user, job_data: job_data)
-        subject
-      end
+        it 'returns a 200 OK status' do
+          expect(response).to have_http_status(:ok)
+        end
 
-      it 'clears job data from the session' do
-        subject
-        expect(session[:job]).to be_nil
+        it 'clears job data from the session' do
+          expect(session[:job]).to be_nil
+        end
+
+        it 'renders the warning' do
+          expect(response.body).to include(I18n.t('upload.delivery_error'))
+        end
       end
     end
   end
