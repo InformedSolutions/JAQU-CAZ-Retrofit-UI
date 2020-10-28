@@ -8,6 +8,7 @@
 #
 # All methods are on the class level, so there is no initializer method.
 class RegisterCheckerApi < BaseApi
+  # Url is needed for submit vehicles
   API_URL = ENV.fetch('RETROFIT_API_URL', 'localhost:3001').freeze
   base_uri "#{API_URL}/v1/retrofit/register-csv-from-s3"
 

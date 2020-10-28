@@ -65,10 +65,10 @@ class UploadController < ApplicationController
   #    :GET /upload/index
   #
   def index
-    if session[:job]
-      @job_errors = RegisterCheckerApi.job_errors(job_name, job_correlation_id)
-      session[:job] = nil
-    end
+    return unless session[:job]
+
+    @job_errors = RegisterCheckerApi.job_errors(job_name, job_correlation_id)
+    session[:job] = nil
   end
 
   # Renders the data rules page.
@@ -128,17 +128,15 @@ class UploadController < ApplicationController
 
   # Checks if user +aws_status+ equality to 'FORCE_NEW_PASSWORD'.
   def redirect_to_new_password_path
-    if current_user.aws_status == 'FORCE_NEW_PASSWORD'
-      redirect_to new_password_path
-    end
+    redirect_to new_password_path if current_user.aws_status == 'FORCE_NEW_PASSWORD'
   end
 
   # Checks if session +job+ is present.
   def check_job_data
-    if session[:job].nil?
-      Rails.logger.error 'Job identifier is missing'
-      redirect_to root_path
-    end
+    return unless session[:job].nil?
+
+    Rails.logger.error 'Job identifier is missing'
+    redirect_to root_path
   end
 
   # Returns current time in a proper format.
