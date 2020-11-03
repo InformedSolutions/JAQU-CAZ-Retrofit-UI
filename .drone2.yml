@@ -39,7 +39,7 @@ steps:
       - docker build -t test-tools-image .
     environment:
       GIT_PRIVATE_SSH:
-        from_secret: jaqu_lower_github_private_key 
+        from_secret: jaqu_lower_github_private_key
 
   - name: run owasp zap tests
     image: test-tools-image
@@ -50,7 +50,7 @@ steps:
       ZAP_PROXY_URL: 'zap'
       BASEURL_RETRO: 'https://dev-retrofit.datauploadportal.co.uk/'
       VALID_USERNAME: 'tester@informed.com'
-      VALID_PASSWORD: 'Tester123..'
+      VALID_PASSWORD: 'Tester123...'
       SCREENSHOT_TYPE: 'base'
       LOCATION: local
     commands:
@@ -76,7 +76,7 @@ steps:
         from_secret: browserstack_auth_key
       BASEURL_RETRO: 'https://dev-retrofit.datauploadportal.co.uk'
       VALID_USERNAME: 'tester@informed.com'
-      VALID_PASSWORD: 'Tester123..'
+      VALID_PASSWORD: 'Tester123...'
       BROWSER_SET: 'mid'
       VCCS_USER: 'vccsservice'
       VCCS_PASSWORD: 'Password001!'
@@ -169,7 +169,7 @@ steps:
     pull: never
     commands:
       - bundle audit check --update
-      - yarn run improved-yarn-audit --exclude '1548' --retry-on-network-failure
+      - yarn run improved-yarn-audit --retry-on-network-failure
       - brakeman
     volumes:
       - name: docker_sock
@@ -217,7 +217,8 @@ steps:
   - name: deploy to dev
     image: hashicorp/terraform:0.12.3
     commands:
-      - apk update && apk add bash
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
       - mkdir ~/.ssh
       - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
@@ -395,7 +396,7 @@ steps:
     pull: never
     commands:
       - bundle audit check --update
-      - yarn run improved-yarn-audit --exclude '1548' --retry-on-network-failure
+      - yarn run improved-yarn-audit --retry-on-network-failure
       - brakeman
     volumes:
       - name: docker_sock
@@ -428,7 +429,8 @@ steps:
   - name: plan updates in st
     image: hashicorp/terraform:0.12.3
     commands:
-      - apk update && apk add bash
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
       - mkdir ~/.ssh
       - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
@@ -478,7 +480,8 @@ steps:
   - name: deploy to st
     image: hashicorp/terraform:0.12.3
     commands:
-      - apk update && apk add bash
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
       - mkdir ~/.ssh
       - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
@@ -722,7 +725,8 @@ steps:
   - name: plan updates in sit
     image: hashicorp/terraform:0.12.3
     commands:
-      - apk update && apk add bash
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
       - mkdir ~/.ssh
       - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
@@ -772,7 +776,8 @@ steps:
   - name: deploy to sit
     image: hashicorp/terraform:0.12.3
     commands:
-      - apk update && apk add bash
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
       - mkdir ~/.ssh
       - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
@@ -1125,7 +1130,7 @@ steps:
     pull: never
     commands:
       - bundle audit check --update
-      - yarn run improved-yarn-audit --exclude '1548' --retry-on-network-failure
+      - yarn run improved-yarn-audit --retry-on-network-failure
       - brakeman
     volumes:
       - name: docker_sock
@@ -1158,7 +1163,8 @@ steps:
   - name: plan updates in uat
     image: hashicorp/terraform:0.12.3
     commands:
-      - apk update && apk add bash
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
       - mkdir ~/.ssh
       - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
@@ -1208,7 +1214,8 @@ steps:
   - name: deploy to uat
     image: hashicorp/terraform:0.12.3
     commands:
-      - apk update && apk add bash
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
       - mkdir ~/.ssh
       - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa

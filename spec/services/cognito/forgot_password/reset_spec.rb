@@ -11,6 +11,9 @@ RSpec.describe Cognito::ForgotPassword::Reset do
 
   before do
     allow(ResetPasswordForm).to receive(:new).with(username).and_return(form)
+    allow(Cognito::ForgotPassword::RateLimitVerification).to receive(:call).with(
+      username: username
+    ).and_return(true)
     allow(Cognito::Client.instance).to receive(:forgot_password).with(
       client_id: anything,
       username: username
