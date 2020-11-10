@@ -70,7 +70,6 @@ module Cognito
         auth_parameters: { 'USERNAME' => username, 'PASSWORD' => password }
       )
       Cognito::Lockout::UpdateUser.call(username: username, failed_logins: 0)
-      log_successful_call
       auth_response
     end
 

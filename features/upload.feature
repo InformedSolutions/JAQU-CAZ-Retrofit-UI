@@ -17,7 +17,7 @@ Feature: Upload
     Then I am redirected to the Success page
       And I should see "Upload successful"
       And I should see "Retrofitted vehicles database has been successfully updated"
-      And I should see "We have saved your data to the Retrofitted vehicles database."
+      And I should see "You can update your data whenever you need to by uploading a new file."
       And I should receive a success upload email
     When I refresh the page
     Then I should not receive a success upload email again

@@ -51,7 +51,6 @@ module Cognito
       unless defined? @user_data
         log_action 'Getting user'
         @user_data = client.get_user(access_token: access_token)
-        log_successful_call
       end
 
       @user_data
