@@ -10,7 +10,7 @@ secret_key = ENV.fetch('SES_SECRET_ACCESS_KEY') do
   ENV.fetch('AWS_SECRET_ACCESS_KEY', 'example_key')
 end
 
-credentials = if ENV['S3_AWS_ACCESS_KEY_ID']
+credentials = if ENV['SES_ACCESS_KEY_ID'] && ENV['SES_SECRET_ACCESS_KEY']
                 Aws::Credentials.new(access_id, secret_key)
               else
                 Aws::ECSCredentials.new({ ip_address: '169.254.170.2' })

@@ -9,6 +9,14 @@ Layout/LineLength:
   Max: 110
   IgnoredPatterns: ['(\A|\s)#']
 
+Metrics/AbcSize:
+  Exclude:
+    - 'app/controllers/upload_controller.rb'
+
+Metrics/MethodLength:
+  Exclude:
+    - 'app/controllers/upload_controller.rb'
+
 Metrics/BlockLength:
   ExcludedMethods: ['describe', 'context']
   Exclude:
