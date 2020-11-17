@@ -1,16 +1,20 @@
 %main.govuk-main-wrapper#main-content{role: 'main'}
   .govuk-grid-row
+    .govuk-grid-column-full
+      %h1.govuk-heading-xl Retrofitted Vehicles Upload Portal
+  .govuk-grid-row
     .govuk-grid-column-two-thirds
-      %h1.govuk-heading-l Retrofitted Vehicles Data Upload
+      %p Use this page to upload data about vehicles that have been retrofitted.
+
+      %h2.govuk-heading-m Uploading your data
       - if @job_errors
         = render 'upload/job_errors'
       - elsif alert
         = render 'shared/errors'
       %p
-        Use this page to upload retrofitted vehicles data.
-        Your upload must be a CSV file with information in a specific format.
-        For information on this format see the
-        %a{href: data_rules_upload_index_path} data rules
+        Your data must be saved as a CSV file and be formatted according to the
+        %a{href: data_rules_upload_index_path} data rules.
+        You should read the data rules before you upload a file to avoid errors.
 
       = form_tag(import_upload_index_path, multipart: true) do
         .govuk-form-group{class: ('govuk-form-group--error' if alert)}
