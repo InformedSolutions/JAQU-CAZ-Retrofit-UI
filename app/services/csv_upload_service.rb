@@ -103,7 +103,7 @@ class CsvUploadService < BaseService
 
   # Returns a hash.
   def file_metadata
-    { 'uploader-id': user.sub, 'csv-content-type': 'RETROFIT_LIST' }
+    { 'uploader-id': user.preferred_username, 'csv-content-type': 'RETROFIT_LIST' }
   end
 
   # AWS S3 Bucket Name.
