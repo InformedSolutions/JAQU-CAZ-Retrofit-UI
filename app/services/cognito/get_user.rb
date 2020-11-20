@@ -25,6 +25,7 @@ module Cognito
     # Sets the details of current user using Cognito response.
     def call
       update_user
+      update_preferred_username
       user
     end
 
@@ -36,6 +37,7 @@ module Cognito
       user.email = extract_attr('email')
       user.sub = extract_attr('sub')
       user.aws_status = 'OK'
+      user.preferred_username = preferred_username || sub
     end
 
     # Returns a string, eg. `test@example.com`
@@ -54,6 +56,25 @@ module Cognito
       end
 
       @user_data
+    end
+
+    # Requesting a Cognito service to update `preferred_username` attribute
+    def update_preferred_username
+      Cognito::UpdatePreferredUsername.call(
+        username: username,
+        preferred_username: preferred_username,
+        sub: sub
+      )
+    end
+
+    # `preferred_username` on Cognito
+    def preferred_username
+      @preferred_username ||= extract_attr('preferred_username')
+    end
+
+    # `sub` on Cognito
+    def sub
+      @sub ||= extract_attr('sub')
     end
   end
 end
