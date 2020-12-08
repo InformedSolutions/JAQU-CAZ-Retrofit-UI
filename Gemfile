@@ -13,12 +13,20 @@ gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'
 gem 'aws-sdk-secretsmanager'
 gem 'bootsnap', require: false
+gem 'brakeman'
+gem 'bundler-audit'
 gem 'devise'
 gem 'haml'
 gem 'httparty'
 gem 'puma'
+gem 'rubocop-rails'
 gem 'sdoc', require: false
 gem 'webpacker'
+
+gem 'aws-sdk-cognitoidentityprovider'
+gem 'aws-sdk-rails'
+gem 'aws-sdk-s3'
+gem 'aws-sdk-secretsmanager'
 
 group :development, :test do
   gem 'dotenv-rails'
@@ -38,14 +46,10 @@ group :development do
 end
 
 group :test do
-  gem 'brakeman'
-  gem 'bundler-audit'
   gem 'capybara'
   gem 'cucumber-rails', require: false
   gem 'i18n-tasks'
   gem 'rails-controller-testing'
-  gem 'rubocop-rails'
-  gem 'scss_lint-govuk', require: false
   gem 'selenium-webdriver'
   gem 'show_me_the_cookies'
   gem 'simplecov', '~> 0.17.1', require: false

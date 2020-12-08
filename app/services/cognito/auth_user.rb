@@ -3,7 +3,7 @@
 ##
 # Module used to wrap communication with Amazon Cognito
 #
-# Configuration of the client is done in config/initializers/cognito_client.rb and by ENV variables
+# Configuration of the client is done in services/cognito/client.rb and by ENV variables
 #
 module Cognito
   ##
