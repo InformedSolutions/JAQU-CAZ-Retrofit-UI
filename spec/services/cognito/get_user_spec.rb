@@ -2,24 +2,27 @@
 
 require 'rails_helper'
 
-RSpec.describe Cognito::GetUser do
+describe Cognito::GetUser do
   subject(:service_call) { described_class.call(access_token: token, username: username) }
 
   let(:token) { SecureRandom.uuid }
   let(:cognito_response) do
     OpenStruct.new(username: username, user_attributes: [
                      OpenStruct.new(name: 'email', value: email),
+                     OpenStruct.new(name: 'preferred_username', value: preferred_username),
                      OpenStruct.new(name: 'sub', value: sub)
                    ])
   end
   let(:email) { 'test@example.com' }
   let(:username) { 'wojtek' }
+  let(:preferred_username) { SecureRandom.uuid }
   let(:sub) { SecureRandom.uuid }
 
   before do
     allow(Cognito::Client.instance).to receive(:get_user)
       .with(access_token: token)
       .and_return(cognito_response)
+    allow(Cognito::UpdatePreferredUsername).to receive(:call).and_return(true)
   end
 
   it 'returns an instance of the user class' do
@@ -44,6 +47,27 @@ RSpec.describe Cognito::GetUser do
 
   it 'sets sub' do
     expect(service_call.sub).to eq(sub)
+  end
+
+  it 'calls Cognito::UpdatePreferredUsername service' do
+    service_call
+    expect(Cognito::UpdatePreferredUsername).to have_received(:call)
+  end
+
+  describe '.preferred_username' do
+    context 'when preferred_username not nil' do
+      it 'returns a proper value' do
+        expect(service_call.preferred_username).to eq(preferred_username)
+      end
+    end
+
+    context 'when preferred_username is nil' do
+      let(:preferred_username) { nil }
+
+      it 'returns a proper value' do
+        expect(service_call.preferred_username).to eq(sub)
+      end
+    end
   end
 
   context 'when the initial user is given' do

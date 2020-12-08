@@ -5,7 +5,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.7.2'
 
-gem 'rails', '~> 6.0.3.3'
+gem 'rails', '~> 6.0.3.4'
 
 gem 'activerecord-nulldb-adapter'
 gem 'aws-sdk-cognitoidentityprovider'
@@ -29,13 +29,11 @@ gem 'aws-sdk-s3'
 gem 'aws-sdk-secretsmanager'
 
 group :development, :test do
-  gem 'byebug'
   gem 'dotenv-rails'
   gem 'haml-rails'
-  gem 'pry-byebug'
-  gem 'pry-rails'
   gem 'rspec-rails'
-  gem 'scss_lint-govuk', require: false
+  gem 'ruby_jard'
+  gem 'yard'
 end
 
 group :development do
@@ -50,6 +48,7 @@ end
 group :test do
   gem 'capybara'
   gem 'cucumber-rails', require: false
+  gem 'i18n-tasks'
   gem 'rails-controller-testing'
   gem 'selenium-webdriver'
   gem 'show_me_the_cookies'
