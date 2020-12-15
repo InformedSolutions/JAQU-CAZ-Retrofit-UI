@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Cognito::AuthUser do
+describe Cognito::AuthUser do
   subject(:service_call) do
     described_class.call(username: username, password: password, login_ip: remote_ip)
   end
@@ -80,7 +80,7 @@ RSpec.describe Cognito::AuthUser do
     end
   end
 
-  context 'when call raises exception' do
+  context 'when call raises `NotAuthorizedException` exception' do
     before do
       allow(Cognito::Client.instance)
         .to receive(:initiate_auth)
@@ -90,7 +90,19 @@ RSpec.describe Cognito::AuthUser do
     end
 
     it 'returns false' do
-      expect(service_call).to be_falsey
+      expect(subject).to be_falsey
+    end
+  end
+
+  context 'when call raises `ServiceError` exception' do
+    before do
+      allow(Cognito::Client.instance).to receive(:initiate_auth).and_raise(
+        Aws::CognitoIdentityProvider::Errors::ServiceError.new('', 'error')
+      )
+    end
+
+    it 'returns false' do
+      expect(subject).to be_falsey
     end
   end
 end

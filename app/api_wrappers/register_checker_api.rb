@@ -8,6 +8,7 @@
 #
 # All methods are on the class level, so there is no initializer method.
 class RegisterCheckerApi < BaseApi
+  # Url is needed for submit vehicles
   API_URL = ENV.fetch('RETROFIT_API_URL', 'localhost:3001').freeze
   base_uri "#{API_URL}/v1/retrofit/register-csv-from-s3"
 
@@ -137,17 +138,6 @@ class RegisterCheckerApi < BaseApi
         'Content-Type' => 'application/json',
         'X-Correlation-ID' => correlation_id
       }
-    end
-
-    ##
-    # Logs given message at +info+ level with a proper tag.
-    #
-    # ==== Attributes
-    #
-    # * +msg+ - string, log message
-    #
-    def log_call(msg)
-      Rails.logger.info "[RegisterCheckerApi] #{msg}"
     end
   end
 end
