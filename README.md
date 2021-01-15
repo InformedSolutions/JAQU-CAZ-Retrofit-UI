@@ -1,5 +1,7 @@
 ## Retrofitted Vehicles Uploader
 
+[![Build Status](http://drone-1587293244.eu-west-2.elb.amazonaws.com/api/badges/InformedSolutions/JAQU-CAZ-Retrofit-UI/status.svg?ref=refs/heads/develop)](http://drone-1587293244.eu-west-2.elb.amazonaws.com/InformedSolutions/JAQU-CAZ-Retrofit-UI)
+
 ### Generating documentation
 
 To generate code documentation download the project and install rails dependencies.
