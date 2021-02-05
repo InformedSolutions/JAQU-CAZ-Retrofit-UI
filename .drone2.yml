@@ -168,8 +168,9 @@ steps:
     image: test-retrofit-frontend
     pull: never
     commands:
-      - bundle audit check --update
-      - yarn run improved-yarn-audit --retry-on-network-failure
+      - bundle audit check --ignore CVE-2020-26247 --update
+      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
+      - yarn run improved-yarn-audit --exclude '1589' --retry-on-network-failure
       - brakeman
     volumes:
       - name: docker_sock
@@ -215,7 +216,7 @@ steps:
 
   # Invoke terraform scripts with tagged image number
   - name: deploy to dev
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -395,8 +396,9 @@ steps:
     image: test-retrofit-frontend
     pull: never
     commands:
-      - bundle audit check --update
-      - yarn run improved-yarn-audit --retry-on-network-failure
+      - bundle audit check --ignore CVE-2020-26247 --update
+      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
+      - yarn run improved-yarn-audit --exclude '1589' --retry-on-network-failure
       - brakeman
     volumes:
       - name: docker_sock
@@ -427,7 +429,7 @@ steps:
 
   # Invoke terraform scripts with tagged image number
   - name: plan updates in st
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -478,7 +480,7 @@ steps:
 
   # Invoke terraform scripts with tagged image number
   - name: deploy to st
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -723,7 +725,7 @@ steps:
 
   # Invoke terraform scripts with tagged image number
   - name: plan updates in sit
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -774,7 +776,7 @@ steps:
 
   # Invoke terraform scripts with tagged image number
   - name: deploy to sit
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -887,7 +889,7 @@ steps:
 
   # Invoke terraform scripts with tagged image number
   - name: plan updates in preprod
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -943,7 +945,7 @@ steps:
 
   # Invoke terraform scripts with tagged image number
   - name: deploy to preprod
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -1129,8 +1131,9 @@ steps:
     image: test-retrofit-frontend
     pull: never
     commands:
-      - bundle audit check --update
-      - yarn run improved-yarn-audit --retry-on-network-failure
+      - bundle audit check --ignore CVE-2020-26247 --update
+      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
+      - yarn run improved-yarn-audit --exclude '1589' --retry-on-network-failure
       - brakeman
     volumes:
       - name: docker_sock
@@ -1161,7 +1164,7 @@ steps:
 
   # Invoke terraform scripts with tagged image number
   - name: plan updates in uat
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -1212,7 +1215,7 @@ steps:
 
   # Invoke terraform scripts with tagged image number
   - name: deploy to uat
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -1324,7 +1327,7 @@ steps:
 
   # Invoke terraform scripts with tagged image number
   - name: plan updates in prod
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -1380,7 +1383,7 @@ steps:
 
   # Invoke terraform scripts with tagged image number
   - name: deploy to prod
-    image: hashicorp/terraform:0.12.3
+    image: hashicorp/terraform:0.12.23
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
