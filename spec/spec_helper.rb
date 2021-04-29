@@ -11,7 +11,7 @@ require 'yard'
 
 # Run scanner to check which files need to be documented
 warn('Code documentation coverage:')
-YARD::CLI::Stats.new.run('--list-undoc', '--compact', '--no-save')
+YARD::CLI::Stats.new.run('--list-undoc', '--private', '--compact', '--no-save', '-q')
 
 SimpleCov.start 'rails' do
   # minimum coverage percentage expected
