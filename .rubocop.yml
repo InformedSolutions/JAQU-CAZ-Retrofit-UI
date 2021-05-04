@@ -2,23 +2,15 @@ require: rubocop-rails
 inherit_from: ./lib/rubocop/blacklist.yml
 
 AllCops:
-  TargetRubyVersion: 2.7.2
+  TargetRubyVersion: 3.0.0
   NewCops: enable
 
 Layout/LineLength:
   Max: 110
   IgnoredPatterns: ['(\A|\s)#']
 
-Metrics/AbcSize:
-  Exclude:
-    - 'app/controllers/upload_controller.rb'
-
-Metrics/MethodLength:
-  Exclude:
-    - 'app/controllers/upload_controller.rb'
-
 Metrics/BlockLength:
-  ExcludedMethods: ['describe', 'context']
+  IgnoredMethods: ['describe', 'context']
   Exclude:
     - 'config/routes.rb'
     - 'config/environments/*.rb'

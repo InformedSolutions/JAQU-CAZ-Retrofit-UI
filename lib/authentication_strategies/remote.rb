@@ -3,7 +3,7 @@
 ##
 # Module used to wrap communication with Amazon Cognito
 #
-# Configuration of the client is done in services/cognito/client.rb and by ENV variables
+# Configuration of the client is done in config/initializers/cognito_client.rb and by ENV variables
 #
 module AuthenticationStrategies
   ##
@@ -35,6 +35,7 @@ module AuthenticationStrategies
       authentication_hash[:username]
     end
 
+    # remote_authentication method is defined in Devise::Models::RemoteAuthenticatable
     def authenticate_user(resource, auth_params)
       # remote_authentication method is defined in Devise::Models::RemoteAuthenticatable
       #

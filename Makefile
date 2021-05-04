@@ -8,9 +8,6 @@ run:
 	rsync -av --progress /vagrant/. ~/src --exclude node_modules
 	cd ~/src; bundle install; yarn install; rails server
 
-test-docker-build:
-	docker build -t test-docker-build -f Dockerfile.build --build-arg secret_key_base=test .
-
 unit-test:
 	yarn install
 	rspec -f d
