@@ -33,6 +33,7 @@ module CsvUploader
 
     config.time_zone = 'London'
     config.x.time_format = '%d %B %Y %H:%M:%S %Z'
+    config.x.host = ENV['HOST']
 
     # https://github.com/aws/aws-sdk-rails
     config.action_mailer.delivery_method = :aws_sdk
