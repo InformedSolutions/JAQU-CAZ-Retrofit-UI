@@ -11,8 +11,8 @@ class ApplicationController < ActionController::Base
 
   # check if host headers are valid
   before_action :validate_host_headers!,
-  except: %i[health build_id],
-  if: -> { Rails.env.production? && Rails.configuration.x.host.present? }
+                except: %i[health build_id],
+                if: -> { Rails.env.production? && Rails.configuration.x.host.present? }
 
   ##
   # Health endpoint
@@ -80,5 +80,4 @@ class ApplicationController < ActionController::Base
     Security::HostHeaderValidator.call(request: request, allowed_hosts: Rails.configuration.x.host)
   end
   # :nocov:
-
 end
