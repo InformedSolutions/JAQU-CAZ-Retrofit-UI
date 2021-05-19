@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   rescue_from CsvUploadFailureException, with: :handle_exception
 
   # rescues from API and security errors
-  rescue_from InvalidHostException, with :render_server_unavailable
+  rescue_from InvalidHostException, with: :render_server_unavailable
 
   # check if host headers are valid
   before_action :validate_host_headers!,
