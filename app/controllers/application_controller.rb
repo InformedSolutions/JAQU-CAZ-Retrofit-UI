@@ -8,8 +8,14 @@ class ApplicationController < ActionController::Base
   protect_from_forgery prepend: true
   # rescues from upload validation or if upload to AWS S3 failed
   rescue_from CsvUploadFailureException, with: :handle_exception
-  # rescues from security error
-  rescue_from InvalidHostException, with: :render_service_unavailable
+  # rescues from API and security errors
+  rescue_from Errno::ECONNREFUSED,
+              SocketError,
+              BaseApi::Error500Exception,
+              BaseApi::Error422Exception,
+              BaseApi::Error400Exception,
+              InvalidHostException,
+              with: :render_service_unavailable
 
   # check if host headers are valid
   before_action :validate_host_headers!,
