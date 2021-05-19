@@ -9,6 +9,9 @@ class ApplicationController < ActionController::Base
   # rescues from upload validation or if upload to AWS S3 failed
   rescue_from CsvUploadFailureException, with: :handle_exception
 
+  # rescues from API and security errors
+  rescue_from InvalidHostException, with :render_server_unavailable
+
   # check if host headers are valid
   before_action :validate_host_headers!,
                 except: %i[health build_id],
@@ -62,6 +65,14 @@ class ApplicationController < ActionController::Base
   # Redirects to root path and shows an error message if `CsvUploadFailureException` raised
   def handle_exception(exception)
     redirect_to(root_path, alert: exception.message)
+  end
+
+  # Function used as a rescue from API errors.
+  # Logs the exception and renders service unavailable page
+  def render_server_unavailable(exception)
+    Rails.logger.error "#{exception.class}: #{exception}"
+
+    render template: 'errors/service_unavailable', status: :service_unavailable
   end
 
   # Overwriting the sign_out redirect path method
