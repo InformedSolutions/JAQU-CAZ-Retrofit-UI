@@ -9,6 +9,11 @@ class ApplicationController < ActionController::Base
   # rescues from upload validation or if upload to AWS S3 failed
   rescue_from CsvUploadFailureException, with: :handle_exception
 
+  # check if host headers are valid
+  before_action :validate_host_headers!,
+                except: %i[health build_id],
+                if: -> { Rails.env.production? && Rails.configuration.x.host.present? }
+
   ##
   # Health endpoint
   #
@@ -68,4 +73,11 @@ class ApplicationController < ActionController::Base
   def assign_back_button_url
     @back_button_url = request.referer || root_path
   end
+
+  # Checks if hosts were not manipulated
+  # :nocov:
+  def validate_host_headers!
+    Security::HostHeaderValidator.call(request: request, allowed_hosts: Rails.configuration.x.host)
+  end
+  # :nocov:
 end
