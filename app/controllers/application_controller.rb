@@ -9,9 +9,6 @@ class ApplicationController < ActionController::Base
   # rescues from upload validation or if upload to AWS S3 failed
   rescue_from CsvUploadFailureException, with: :handle_exception
 
-  # rescues from API and security errors
-  rescue_from InvalidHostException, with: :render_server_unavailable
-
   # check if host headers are valid
   before_action :validate_host_headers!,
                 except: %i[health build_id],
