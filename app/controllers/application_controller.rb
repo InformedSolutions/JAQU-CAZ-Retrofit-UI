@@ -8,6 +8,8 @@ class ApplicationController < ActionController::Base
   protect_from_forgery prepend: true
   # rescues from upload validation or if upload to AWS S3 failed
   rescue_from CsvUploadFailureException, with: :handle_exception
+  # rescues from API and security errors
+  rescue_from InvalidHostException, with: :render_service_unavailable
 
   # check if host headers are valid
   before_action :validate_host_headers!,
@@ -63,6 +65,16 @@ class ApplicationController < ActionController::Base
   def handle_exception(exception)
     redirect_to(root_path, alert: exception.message)
   end
+
+  # Function used as a rescue from API errors.
+  # Logs the exception and renders service unavailable page
+  # :nocov:
+  def render_service_unavailable(exception)
+    Rails.logger.error "#{exception.class}: #{exception}"
+
+    render template: 'errors/service_unavailable', status: :service_unavailable
+  end
+  # :nocov:
 
   # Overwriting the sign_out redirect path method
   def after_sign_out_path_for(_resource_or_scope)
