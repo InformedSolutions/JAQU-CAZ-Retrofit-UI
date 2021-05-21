@@ -42,7 +42,7 @@ describe 'Unprocessable Entity' do
   end
 end
 
-describe '#server_unavailable' do
+describe '#service_unavailable' do
   subject { get '/503.html' }
 
   it 'returns a :service_unavailable response' do
