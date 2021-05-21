@@ -68,11 +68,13 @@ class ApplicationController < ActionController::Base
 
   # Function used as a rescue from API errors.
   # Logs the exception and renders service unavailable page
+   # :nocov:
   def render_service_unavailable(exception)
     Rails.logger.error "#{exception.class}: #{exception}"
 
     render template: 'errors/service_unavailable', status: :service_unavailable
   end
+   # :nocov:
 
   # Overwriting the sign_out redirect path method
   def after_sign_out_path_for(_resource_or_scope)
