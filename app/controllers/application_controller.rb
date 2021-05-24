@@ -9,7 +9,9 @@ class ApplicationController < ActionController::Base
   # rescues from upload validation or if upload to AWS S3 failed
   rescue_from CsvUploadFailureException, with: :handle_exception
   # rescues from API and security errors
-  rescue_from InvalidHostException, with: :render_service_unavailable
+  rescue_from InvalidHostException,
+              RefererXssException,
+              with: :render_service_unavailable
 
   # check if host headers are valid
   before_action :validate_host_headers!,
@@ -84,6 +86,8 @@ class ApplicationController < ActionController::Base
   # Assign back button url
   def assign_back_button_url
     @back_button_url = request.referer || root_path
+
+    Security::RefererXssHandler.call(referer: @back_button_url)
   end
 
   # Checks if hosts were not manipulated
