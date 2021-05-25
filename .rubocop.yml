@@ -20,4 +20,7 @@ Style/MixinUsage:
     - 'features/step_definitions/*.rb'
 
 Lint/MissingSuper:
-   Enabled: false
+  Enabled: false
+
+Rails/EnvironmentVariableAccess:
+  Enabled: false
