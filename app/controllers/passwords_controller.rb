@@ -11,8 +11,9 @@ class PasswordsController < ApplicationController
   # checks if a user aws session not expired
   before_action :validate_aws_session, only: %i[new create]
   # prevent browser page caching if a password_reset_token is present
-  before_action :validate_password_reset_token,
-                only: %i[send_confirmation_code confirm_reset change]
+  before_action :validate_password_reset_token, only: %i[send_confirmation_code confirm_reset change]
+  # assign back button
+  before_action :assign_back_button_url, only: %i[reset confirm_reset]
 
   ##
   # Renders the password change page.
