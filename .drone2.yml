@@ -98,6 +98,8 @@ name: retrofit-web-pr
 trigger:
   branch:
     - test-target
+  ref:
+    - refs/heads/**
   event:
     - pull_request
     - push
