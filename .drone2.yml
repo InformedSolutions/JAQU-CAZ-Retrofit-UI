@@ -98,8 +98,6 @@ name: retrofit-web-pr
 trigger:
   branch:
     - test-target
-  ref:
-    - refs/heads/experiment/drone-upstream
   event:
     - pull_request
     - push
