@@ -99,7 +99,7 @@ trigger:
   branch:
     - develop
   ref:
-  - refs/heads/experiment/drone-upstream
+    - refs/heads/experiment/drone-upstream
   event:
     - pull_request
     - push
