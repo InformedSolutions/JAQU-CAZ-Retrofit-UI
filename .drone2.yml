@@ -98,6 +98,8 @@ name: retrofit-web-pr
 trigger:
   branch:
     - develop
+  ref:
+  - refs/heads/experiment/drone-upstream
   event:
     - pull_request
     - push
@@ -112,6 +114,8 @@ steps:
     commands:
     - echo ${DRONE_SOURCE_BRANCH}
     - echo ${DRONE_TARGET_BRANCH}
+    when:
+      experiment/drone-upstream
 
 
   ################################################# End of Dev Environment Steps #######################################################
