@@ -14,3 +14,8 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 # application.js, application.css, and all non-JS/CSS in the app/assets
 # folder are already added.
 # Rails.application.config.assets.precompile += %w( admin.js admin.css )
+
+# This will affect assets in /public, e.g. webpacker assets.
+Rails.application.config.public_file_server.headers = {
+  'Strict-Transport-Security' => 'max-age=31536000'
+}
