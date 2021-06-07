@@ -1,11 +1,12 @@
 //TODO: Replace when https://github.com/alphagov/govuk-design-system-backlog/issues/12 is done
 $background-white: #d5e8f3;
 $green: #00823b;
-$white: #fff;
+$white: #ffffff;
 $light-grey: #f3f2f1;
 $darker-green: #00692f;
 $cookie-border: #0b0c0c;
 
+/* stylelint-disable max-nesting-depth, declaration-no-important */
 .global-cookie-message {
   background-color: $white;
   border: 2px solid $cookie-border;
@@ -78,3 +79,4 @@ $cookie-border: #0b0c0c;
 .global-cookie-message__hidden {
   display: none !important;
 }
+/* stylelint-enable max-nesting-depth, declaration-no-important */
