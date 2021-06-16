@@ -6,6 +6,5 @@ import { initAll } from 'govuk-frontend/govuk/all.js';
 import cookieControl from "../src/cookieControl";
 
 document.body.classList.add('js-enabled');
-
 initAll();
 cookieControl();
