@@ -45,7 +45,6 @@ group :test do
   gem 'i18n-tasks'
   gem 'rails-controller-testing'
   gem 'rubocop-rails'
-  gem 'scss_lint-govuk', require: false
   gem 'selenium-webdriver'
   gem 'show_me_the_cookies'
   gem 'simplecov', '~> 0.17.1', require: false
