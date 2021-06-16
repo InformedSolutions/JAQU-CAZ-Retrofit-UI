@@ -1,11 +1,16 @@
 # frozen_string_literal: true
 
+require 'addressable/uri'
+
 ##
 # This is an abstract class used as a base for all API wrapper classes.
 #
 # It includes {HTTParty gem}[https://github.com/jnunemaker/httparty]
 class BaseApi
   include HTTParty
+
+  # Normalize non-ascii URIs
+  uri_adapter Addressable::URI
 
   ##
   # Class representing 500 HTTP response code (Internal Server Error) returned by API
