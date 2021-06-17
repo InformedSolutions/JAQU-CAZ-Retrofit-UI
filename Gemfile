@@ -8,6 +8,7 @@ ruby '3.0.1'
 gem 'rails', '~> 6.1'
 
 gem 'activerecord-nulldb-adapter'
+gem 'addressable'
 gem 'aws-sdk-cognitoidentityprovider'
 gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'
