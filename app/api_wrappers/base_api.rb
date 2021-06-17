@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'addressable/uri'
-
 ##
 # This is an abstract class used as a base for all API wrapper classes.
 #
