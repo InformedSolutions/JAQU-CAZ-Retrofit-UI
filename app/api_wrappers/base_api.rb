@@ -7,6 +7,9 @@
 class BaseApi
   include HTTParty
 
+  # Normalize non-ascii URIs
+  uri_adapter Addressable::URI
+
   ##
   # Class representing 500 HTTP response code (Internal Server Error) returned by API
   class Error500Exception < ApiException; end

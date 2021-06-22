@@ -8,6 +8,7 @@ ruby '3.0.1'
 gem 'rails', '~> 6.1'
 
 gem 'activerecord-nulldb-adapter'
+gem 'addressable'
 gem 'aws-sdk-cognitoidentityprovider'
 gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'
@@ -45,7 +46,6 @@ group :test do
   gem 'i18n-tasks'
   gem 'rails-controller-testing'
   gem 'rubocop-rails'
-  gem 'scss_lint-govuk', require: false
   gem 'selenium-webdriver'
   gem 'show_me_the_cookies'
   gem 'simplecov', '~> 0.17.1', require: false
