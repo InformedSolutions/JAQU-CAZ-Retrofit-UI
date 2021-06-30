@@ -648,7 +648,7 @@ steps:
   - name: clean agent
     image: docker:19.03.11-git
     commands:
-    - docker system prune -f
+      - docker system prune -f
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -657,7 +657,7 @@ steps:
   - name: build
     image: docker:19.03.11-git
     commands:
-    - docker build -f Dockerfile.test -t test-retrofit-frontend:latest .
+      - docker build -f Dockerfile.test -t test-retrofit-frontend:latest .
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -726,22 +726,22 @@ steps:
     depends_on:
       - static code analysis (Ruby)
 
-    - name: clone iac
-      image: hashicorp/terraform:0.12.23
-      commands:
-        - apk update && apk add bash
-        - mkdir ~/.ssh
-        - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
-        - chmod 600 ~/.ssh/id_rsa
-        - touch ~/.ssh/known_hosts
-        - chmod 600 ~/.ssh/known_hosts
-        - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
-        - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
-        - cd JAQU-CAZ-IAC
-        - git checkout controlled_sit
-      environment:
-        GIT_PRIVATE_SSH:
-          from_secret: jaqu_lower_github_private_key
+  - name: clone iac
+    image: hashicorp/terraform:0.12.23
+    commands:
+      - apk update && apk add bash
+      - mkdir ~/.ssh
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
+      - cd JAQU-CAZ-IAC
+      - git checkout controlled_sit
+    environment:
+      GIT_PRIVATE_SSH:
+        from_secret: jaqu_lower_github_private_key
 
   # Invoke terraform scripts with tagged image number
   - name: plan updates in sit
