@@ -90,35 +90,6 @@ steps:
 
 ---
 
-  ################################################### PR Test Environment Steps ########################################################
-kind: pipeline
-type: docker
-name: retrofit-web-pr
-
-trigger:
-  branch:
-    - test-target
-  ref:
-    - refs/heads/experiment/drone-upstream
-  event:
-    - pull_request
-    - push
-concurrency:
-  limit: 1
-
-steps:
-
-  # Build docker images
-  - name: test
-    image: docker:19.03.11-git
-    commands:
-    - echo ${DRONE_SOURCE_BRANCH}
-    - echo ${DRONE_TARGET_BRANCH}
-
-
-  ################################################# End of Dev Environment Steps #######################################################
-
----
 
   ################################################### Dev Environment Steps ########################################################
 kind: pipeline
