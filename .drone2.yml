@@ -1543,15 +1543,14 @@ concurrency:
 
 steps:
 
-  # Invoke terraform scripts with tagged image number
-
   - name: check for hotfix pipeline
     image: alpine:3.11.6
     environment:
      DRONE_SOURCE_BRANCH: ${DRONE_SOURCE_BRANCH}
     commands:
       - sh ci-cd-resources/hotfix-check.sh
-
+      
+  # Invoke terraform scripts with tagged image number
   - name: plan updates in prod
     image: hashicorp/terraform:0.12.23
     commands:
@@ -1909,7 +1908,7 @@ steps:
         - push
 
 
-  ################################################# End of Prod Environment Steps #####################################################
+  ################################################# End of Prod-Hotfix Environment Steps #####################################################
 
 
 
