@@ -746,6 +746,8 @@ steps:
     environment:
       GIT_PRIVATE_SSH:
         from_secret: jaqu_lower_github_private_key
+    depends_on:
+      - static code analysis (Ruby)
 
   # Invoke terraform scripts with tagged image number
   - name: plan updates in sit
