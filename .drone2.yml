@@ -90,35 +90,6 @@ steps:
 
 ---
 
-  ################################################### PR Test Environment Steps ########################################################
-kind: pipeline
-type: docker
-name: retrofit-web-pr
-
-trigger:
-  branch:
-    - test-target
-  ref:
-    - refs/heads/experiment/drone-upstream
-  event:
-    - pull_request
-    - push
-concurrency:
-  limit: 1
-
-steps:
-
-  # Build docker images
-  - name: test
-    image: docker:19.03.11-git
-    commands:
-    - echo ${DRONE_SOURCE_BRANCH}
-    - echo ${DRONE_TARGET_BRANCH}
-
-
-  ################################################# End of Dev Environment Steps #######################################################
-
----
 
   ################################################### Dev Environment Steps ########################################################
 kind: pipeline
@@ -664,7 +635,7 @@ trigger:
     - pull_request
     - push
 concurrency:
-  limit: 1
+  limit: 2
 
 volumes:
 - name: docker_sock
@@ -677,7 +648,7 @@ steps:
   - name: clean agent
     image: docker:19.03.11-git
     commands:
-    - docker system prune -f
+      - docker system prune -f
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -686,10 +657,12 @@ steps:
   - name: build
     image: docker:19.03.11-git
     commands:
-    - docker build -f Dockerfile.test -t test-retrofit-frontend:latest .
+      - docker build -f Dockerfile.test -t test-retrofit-frontend:latest .
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
+    depends_on:
+      - clean agent
 
   # Trigger unit tests
   - name: unit tests
@@ -701,6 +674,8 @@ steps:
     commands:
       - yarn install
       - bundle exec rspec -f d
+    depends_on:
+      - build
 
   # Execute integration/scenario tests
   - name: integration tests
@@ -711,6 +686,8 @@ steps:
         path: /var/run/docker.sock
     commands:
       - bundle exec cucumber
+    depends_on:
+      - unit tests
 
   # Invoke static code analysis through Ruby libraries
   - name: static code analysis (Ruby)
@@ -722,6 +699,8 @@ steps:
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
+    depends_on:
+      - integration tests
 
   # Push built image to ECR registry
   - name: publish image to ecr
@@ -744,14 +723,13 @@ steps:
     when:
       event:
         - push
+    depends_on:
+      - static code analysis (Ruby)
 
-
-  # Invoke terraform scripts with tagged image number
-  - name: plan updates in sit
+  - name: clone iac
     image: hashicorp/terraform:0.12.23
     commands:
-      - apk add --update bash python python-dev py-pip build-base jq
-      - pip install awscli
+      - apk update && apk add bash
       - mkdir ~/.ssh
       - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
@@ -761,6 +739,17 @@ steps:
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
       - git checkout controlled_sit
+    environment:
+      GIT_PRIVATE_SSH:
+        from_secret: jaqu_lower_github_private_key
+
+  # Invoke terraform scripts with tagged image number
+  - name: plan updates in sit
+    image: hashicorp/terraform:0.12.23
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - cd JAQU-CAZ-IAC
       - cd terraform-iac/projects/retrofit/layers/02.web
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
@@ -785,8 +774,6 @@ steps:
       AWS_SECRET_ACCESS_KEY:
         from_secret: jaqu_controlled_aws_secret_access_key
       TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
-      GIT_PRIVATE_SSH:
-        from_secret: jaqu_lower_github_private_key
       AWS_ACCOUNT_NAME: jaqu-controlled
       TF_VAR_secret_key_base:
         from_secret: retrofit_ruby_secret
@@ -796,6 +783,51 @@ steps:
     when:
       event:
         - pull_request
+    depends_on:
+      - clone iac
+
+  # Invoke terraform scripts with tagged image number
+  - name: plan updates in sit2
+    image: hashicorp/terraform:0.12.23
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - cd JAQU-CAZ-IAC
+      - cd terraform-iac/projects/retrofit/layers/02.web
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace select sit2 || tf workspace new sit2
+      - tf plan
+    environment:
+      TF_VAR_access_key:
+        from_secret: jaqu_controlled_aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: jaqu_controlled_aws_secret_access_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: jaqu_controlled_service_aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: jaqu_controlled_service_aws_secret_access_key
+      TF_VAR_master_access_key:
+        from_secret: jaqu_master_aws_access_key_id
+      TF_VAR_master_secret_key:
+        from_secret: jaqu_master_aws_secret_access_key
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_controlled_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_controlled_aws_secret_access_key
+      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
+      AWS_ACCOUNT_NAME: jaqu-controlled
+      TF_VAR_secret_key_base:
+        from_secret: retrofit_ruby_secret
+      TF_VAR_google_analytics_id: UA-144774549-4
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_7PZ3p21Nt1t5A0t
+    when:
+      event:
+        - pull_request
+    depends_on:
+      - plan updates in sit
 
   # Invoke terraform scripts with tagged image number
   - name: deploy to sit
@@ -803,15 +835,7 @@ steps:
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
-      - mkdir ~/.ssh
-      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
-      - chmod 600 ~/.ssh/id_rsa
-      - touch ~/.ssh/known_hosts
-      - chmod 600 ~/.ssh/known_hosts
-      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
-      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout controlled_sit
       - cd terraform-iac/projects/retrofit/layers/02.web
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
@@ -836,8 +860,6 @@ steps:
       AWS_SECRET_ACCESS_KEY:
         from_secret: jaqu_controlled_aws_secret_access_key
       TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
-      GIT_PRIVATE_SSH:
-        from_secret: jaqu_lower_github_private_key
       AWS_ACCOUNT_NAME: jaqu-controlled
       TF_VAR_secret_key_base:
         from_secret: retrofit_ruby_secret
@@ -847,7 +869,52 @@ steps:
     when:
       event:
         - push
+    depends_on:
+      - clone iac
 
+  # Invoke terraform scripts with tagged image number
+  - name: deploy to sit2
+    image: hashicorp/terraform:0.12.23
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - cd JAQU-CAZ-IAC
+      - cd terraform-iac/projects/retrofit/layers/02.web
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace select sit2 || tf workspace new sit2
+      - tf apply -auto-approve
+    environment:
+      TF_VAR_access_key:
+        from_secret: jaqu_controlled_aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: jaqu_controlled_aws_secret_access_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: jaqu_controlled_service_aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: jaqu_controlled_service_aws_secret_access_key
+      TF_VAR_master_access_key:
+        from_secret: jaqu_master_aws_access_key_id
+      TF_VAR_master_secret_key:
+        from_secret: jaqu_master_aws_secret_access_key
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_controlled_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_controlled_aws_secret_access_key
+      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
+      AWS_ACCOUNT_NAME: jaqu-controlled
+      TF_VAR_secret_key_base:
+        from_secret: retrofit_ruby_secret
+      TF_VAR_google_analytics_id: UA-144774549-4
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_7PZ3p21Nt1t5A0t
+    when:
+      event:
+        - push
+    depends_on:
+      - deploy to sit
+      
   - name: codedeploy ui sit
     image: alpine:3.11.6
     commands:
@@ -873,6 +940,36 @@ steps:
     when:
       event:
         - push
+    depends_on:
+      - deploy to sit
+
+  - name: codedeploy ui sit2
+    image: alpine:3.11.6
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - mkdir ~/.aws
+      - echo -e "[profile target_acc]\nrole_arn = $AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
+      - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh . --profile target_acc
+      - bash wait_deploy.sh $APPLICATION_NAME $DEPLOYMENT_GROUP
+      - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=$LAMBDA_BUCKET,bundleType=yaml,key=$PROJECT/$DEPLOY_ENVIRONMENT/appspec.yaml --profile target_acc
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_controlled_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_controlled_aws_secret_access_key
+      AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
+      AWS_DEFAULT_REGION: eu-west-2
+      APPLICATION_NAME: retrofit-codedeploy-service-sit2
+      DEPLOYMENT_GROUP: retrofit-codedeploy-service-sit2
+      PROJECT: retrofit
+      DEPLOY_ENVIRONMENT: sit2
+      LAMBDA_BUCKET: jaqu-shared-project-lambda-bucket
+    when:
+      event:
+        - push
+    depends_on:
+      - deploy to sit2
 
   - name: await ecs rollout
     image: alpine:3.11.6
@@ -888,6 +985,25 @@ steps:
     when:
       event:
         - push
+    depends_on:
+      - codedeploy ui sit
+        
+  - name: await ecs rollout (sit2)
+    image: alpine:3.11.6
+    environment:
+      build_id_url: https://sit2-retrofit-web.cleanairzone.defra.gov.uk/build_id
+      build_id: ${DRONE_BUILD_NUMBER}
+    commands:
+      - apk add curl
+      - sh ci-cd-resources/check_build_number.sh
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        - push
+    depends_on:
+      - codedeploy ui sit2
 
   ################################################# End of SIT Environment Steps #######################################################
 
